@@ -1,1 +1,25 @@
 <iframe src="https://www.google.com/maps/d/embed?mid=1_83AvSFX_RW_EZLRoSyLJmX9PvO-r8I&ehbc=2E312F&kml=https://drive.google.com/file/d/1FlkQiVsFSP6bCRWxqJ578eDymuSRKR7p/view?usp=drivesdk" width="800" height="600"></iframe>
+<script>
+  function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 0, lng: 0},
+      zoom: 2
+    });
+
+    var searchBox = new google.maps.places.SearchBox(document.getElementById('search-box'));
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('search-box'));
+
+    var geoXml = new geoXML3.parser({
+      map: map,
+      singleInfoWindow: true,
+      suppressInfoWindows: false,
+      afterParse: useTheData
+    });
+
+    geoXml.parse(https://drive.google.com/file/d/1FlkQiVsFSP6bCRWxqJ578eDymuSRKR7p/view?usp=drivesdk;)
+
+    function useTheData(doc) {
+      // Η αναζήτηση στο KML έχει ολοκληρωθεί
+    }
+  }
+</script>
