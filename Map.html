@@ -1,26 +1,62 @@
 <input id="search-box" type="text" placeholder="Αναζήτηση">
 <iframe src="https://www.google.com/maps/d/embed?mid=1_83AvSFX_RW_EZLRoSyLJmX9PvO-r8I&ehbc=2E312F&kml=https://drive.google.com/file/d/1FlkQiVsFSP6bCRWxqJ578eDymuSRKR7p/view?usp=drivesdk" width="720" height="1400"></iframe>
+
 <script>
   function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 0, lng: 0},
-      zoom: 2
+      zoom: 4
     });
 
-    var searchBox = new google.maps.places.SearchBox(document.getElementById('search-box'));
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('search-box'));
+    var input = document.getElementById('search-box');
+    var searchBox = new google.maps.places.SearchBox(input);
 
-    var geoXml = new geoXML3.parser({
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    var kmlLayer = new google.maps.KmlLayer({
+      url: 'https://thanasisv.github.io/kml/KMLNAVIGATOR.kml',
       map: map,
-      singleInfoWindow: true,
-      suppressInfoWindows: false,
-      afterParse: useTheData
+      suppressInfoWindows: false
     });
 
-    geoXml.parse(https://drive.google.com/file/d/1FlkQiVsFSP6bCRWxqJ578eDymuSRKR7p/view?usp=drivesdk;)
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
+    });
 
-    function useTheData(doc) {
-      // Η αναζήτηση στο KML έχει ολοκληρωθεί
-    }
+    var markers = [];
+
+    searchBox.addListener('places_changed', function() {
+      var places = searchBox.getPlaces();
+
+      if (places.length == 0) {
+        return;
+      }
+
+      markers.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      markers = [];
+
+      var bounds = new google.maps.LatLngBounds();
+      places.forEach(function(place) {
+        if (!place.geometry) {
+          console.log("Δεν βρέθηκαν γεωμετρικές πληροφορίες για το μέρος:", place);
+          return;
+        }
+
+        markers.push(new google.maps.Marker({
+          map: map,
+          title: place.name,
+          position: place.geometry.location
+        }));
+
+        if (place.geometry.viewport) {
+          bounds.union(place.geometry.viewport);
+        } else {
+          bounds.extend(place.geometry.location);
+        }
+      });
+      map.fitBounds(bounds);
+    });
   }
 </script>
