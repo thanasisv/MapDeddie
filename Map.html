@@ -41,7 +41,7 @@
       var bounds = new google.maps.LatLngBounds();
       places.forEach(function(place) {
         if (!place.geometry) {
-          console.log("Δεν βρέθηκαν γεωμετρικές πληροφορίες για το μέρος:", place);
+          console.error("Δεν βρέθηκαν γεωμετρικές πληροφορίες για το μέρος:", place);
           return;
         }
 
@@ -57,7 +57,11 @@
           bounds.extend(place.geometry.location);
         }
       });
+
       map.fitBounds(bounds);
+
+      // Εκτύπωση των αποτελεσμάτων στην κονσόλα
+      console.log("Αποτελέσματα αναζήτησης:", places);
     });
   }
 </script>
