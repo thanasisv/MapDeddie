@@ -12,6 +12,7 @@
 </head>
 <body>
     <div id="map"></div>
+    <script type="text/javascript" src="https://cdn.rawgit.com/geocodezip/geoxml3/master/polys/geoxml3.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap&libraries=places" async defer></script>
     <script>
         function initMap() {
@@ -22,10 +23,12 @@
 
             // Συνάρτηση για να προσθέσετε το KML στο χάρτη
             function loadKML(kmlUrl) {
-                var kmlLayer = new google.maps.KmlLayer({
-                    url: kmlUrl,
-                    map: map
+                var geoXml = new geoXML3.parser({
+                    map: map,
+                    singleInfoWindow: true
                 });
+
+                geoXml.parse(kmlUrl);
             }
 
             // Φορτώστε το συγκεκριμένο KML αρχείο
@@ -42,8 +45,26 @@
             controls.style.marginTop = '10px';
             map.controls[google.maps.ControlPosition.TOP_LEFT].push(controls);
 
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.bindTo('bounds', map);
+            // Αναζήτηση με βάση το περιεχόμενο του KML
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.addListener('bounds_changed', function() {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            searchBox.addListener('places_changed', function() {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+
+                // Εμφανίστε το πρώτο αποτέλεσμα στον χάρτη
+                map.setCenter(places[0].geometry.location);
+                map.setZoom(14); // Μπορείτε να προσαρμόσετε το επίπεδο ζουμ κατά την επιλογή του μέρους
+
+                // Επιπλέον ενέργειες που μπορείτε να πραγματοποιήσετε με τις πληροφορίες του μέρους
+                // console.log(places[0]);
+            });
         }
     </script>
 </body>
