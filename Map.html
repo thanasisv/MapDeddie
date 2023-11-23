@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Αναζήτηση στον Χάρτη με χρήση KML</title>
+  <title>Αναζήτηση στον Χάρτη KML</title>
   <style>
     #map {
       height: 400px;
@@ -16,7 +16,6 @@
 
   <script>
     var map;
-    var dataLayer;
 
     function initMap() {
       // Αρχικές συντεταγμένες για τον χάρτη
@@ -28,11 +27,14 @@
         zoom: 8
       });
 
-      // Δημιουργία επιπέδου δεδομένων
-      dataLayer = new google.maps.Data({
-        map: map,
-        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml'
-      });
+      // Φόρτωση του KML ως GeoJSON και προσθήκη στον χάρτη
+      var kmlUrl = 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml';
+      var geojsonLayer = new google.maps.Data();
+
+      geojsonLayer.loadGeoJson(kmlUrl);
+
+      // Προσθήκη του GeoJSON στον χάρτη
+      geojsonLayer.setMap(map);
 
       // Αναζήτηση κατά την πληκτρολόγηση
       var input = document.getElementById('search-box');
@@ -40,23 +42,15 @@
 
       // Αναζήτηση βασισμένη σε γεωγραφικές συντεταγμένες
       input.addEventListener('input', function() {
-        searchKml(input.value);
+        searchKml(input.value, geojsonLayer);
       });
     }
 
-    function searchKml(query) {
-      // Επαναφορά του επιπέδου δεδομένων για να αποφευχθούν τα διπλότυπα
-      dataLayer.setMap(null);
-      dataLayer = new google.maps.Data({
-        map: map,
-        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml'
-      });
-
-      // Αναζήτηση στα δεδομένα του KML
-      dataLayer.addListener('addfeature', function(event) {
-        var name = event.feature.getProperty('name');
+    function searchKml(query, geojsonLayer) {
+      geojsonLayer.forEach(function(feature) {
+        var name = feature.getProperty('name');
         if (name && name.toLowerCase().includes(query.toLowerCase())) {
-          var geometry = event.feature.getGeometry();
+          var geometry = feature.getGeometry();
           if (geometry.getType() === 'Point') {
             var location = geometry.get();
             createMarker(location, name);
