@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Αναζήτηση στον Χάρτη με χρήση KML</title>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>Αναζήτηση στον Χάρτη με χρήση KML</h2>
+  <input id="search-box" type="text" placeholder="Αναζήτηση">
+  <div id="map"></div>
+
+  <script>
+    var map;
+    var kmlLayer;
+
+    function initMap() {
+      // Αρχικές συντεταγμένες για τον χάρτη
+      var initialCoords = { lat: 37.7749, lng: -122.4194 };
+
+      // Δημιουργία χάρτη
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: initialCoords,
+        zoom: 8
+      });
+
+      // Προσθήκη επίπεδου KML στον χάρτη
+      kmlLayer = new google.maps.KmlLayer({
+        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
+        map: map
+      });
+
+      // Αναζήτηση κατά την πληκτρολόγηση
+      var input = document.getElementById('search-box');
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+      var searchBox = new google.maps.places.SearchBox(input);
+
+      map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+      });
+
+      searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+          return;
+        }
+
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+          if (place.geometry.viewport) {
+            bounds.union(place.geometry.viewport);
+          } else {
+            bounds.extend(place.geometry.location);
+          }
+        });
+
+        map.fitBounds(bounds);
+      });
+
+      // Αναζήτηση βασισμένη στα δεδομένα του KML
+      input.addEventListener('input', function() {
+        searchKml(input.value);
+      });
+    }
+
+    function searchKml(query) {
+      // Αναζήτηση στα δεδομένα του KML
+      var placemarks = kmlLayer.getPlacemarks();
+      var bounds = new google.maps.LatLngBounds();
+
+      placemarks.forEach(function(placemark) {
+        var name = placemark.name.toLowerCase();
+        if (name.includes(query.toLowerCase())) {
+          var geometry = placemark.geometry;
+          if (geometry.getType() === 'Point') {
+            bounds.extend(geometry.getLocation());
+          } else if (geometry.getType() === 'Polygon') {
+            var paths = geometry.getArray();
+            paths.forEach(function(path) {
+              path.getArray().forEach(function(latlng) {
+                bounds.extend(latlng);
+              });
+            });
+          }
+        }
+      });
+
+      map.fitBounds(bounds);
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+</body>
+</html>
