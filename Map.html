@@ -12,7 +12,7 @@
 </head>
 <body>
     <div id="map"></div>
-    <script type="text/javascript" src="https://cdn.rawgit.com/geocodezip/geoxml3/master/polys/geoxml3.js"></script>
+    <script type="text/javascript" src="https://thanasisv.github.io/geox/kmz/geoxml3.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap&libraries=places" async defer></script>
     <script>
         function initMap() {
@@ -21,18 +21,12 @@
                 zoom: 2
             });
 
-            // Συνάρτηση για να προσθέσετε το KML στο χάρτη
-            function loadKML(kmlUrl) {
-                var geoXml = new geoXML3.parser({
-                    map: map,
-                    singleInfoWindow: true
-                });
+            var geoXml = new geoXML3.parser({
+                map: map,
+                singleInfoWindow: true
+            });
 
-                geoXml.parse(kmlUrl);
-            }
-
-            // Φορτώστε το συγκεκριμένο KML αρχείο
-            loadKML("https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml");
+            geoXml.parse("https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml");
 
             // Προσθήκη μπάρας αναζήτησης
             var input = document.createElement('input');
@@ -61,9 +55,28 @@
                 // Εμφανίστε το πρώτο αποτέλεσμα στον χάρτη
                 map.setCenter(places[0].geometry.location);
                 map.setZoom(14); // Μπορείτε να προσαρμόσετε το επίπεδο ζουμ κατά την επιλογή του μέρους
+            });
+            
+            // Προσθήκη λειτουργίας αναζήτησης στο KML
+            var placemarkArray = geoXml.docs[0].placemarks;
+            for (var i = 0; i < placemarkArray.length; i++) {
+                var place = placemarkArray[i];
+                place.marker.setVisible(false); // Αποκρύπτετε τα στοιχεία
+            }
 
-                // Επιπλέον ενέργειες που μπορείτε να πραγματοποιήσετε με τις πληροφορίες του μέρους
-                // console.log(places[0]);
+            input.addEventListener('input', function() {
+                var searchTerm = input.value.toLowerCase();
+
+                for (var i = 0; i < placemarkArray.length; i++) {
+                    var place = placemarkArray[i];
+                    var name = place.name.toLowerCase();
+
+                    if (name.includes(searchTerm)) {
+                        place.marker.setVisible(true);
+                    } else {
+                        place.marker.setVisible(false);
+                    }
+                }
             });
         }
     </script>
