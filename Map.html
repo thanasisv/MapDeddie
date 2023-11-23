@@ -1,54 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Αναζήτηση στον  KML</title>
-  <style>
-    #map {
-      height: 400px;
-      width: 100%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>KML Map Viewer</title>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-  <h2>Αναζήτηση στον Χάρτη με χρήση KML</h2>
-  <input id="search-box" type="text" placeholder="Αναζήτηση">
-  <div id="map"></div>
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 0, lng: 0},
+                zoom: 2
+            });
 
-  <script>
-    var map;
-    var kmlLayer;
+            // Συνάρτηση για να προσθέσετε το KML στο χάρτη
+            function loadKML(kmlUrl) {
+                var kmlLayer = new google.maps.KmlLayer({
+                    url: kmlUrl,
+                    map: map
+                });
+            }
+          loadKML("https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml");
+            // Αν θέλετε να φορτώσετε το KML από τοπικό αρχείο, χρησιμοποιήστε τοπική διεύθυνση URL
+            // Παράδειγμα: loadKML("http://localhost/path/to/your/file.kml");
 
-    function initMap() {
-      // Αρχικές συντεταγμένες για τον χάρτη
-      var initialCoords = { lat: 37.7749, lng: -122.4194 };
-
-      // Δημιουργία χάρτη
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: initialCoords,
-        zoom: 8
-      });
-
-      // Προσθήκη επίπεδου KML στον χάρτη
-      kmlLayer = new google.maps.KmlLayer({
-        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
-        map: map
-      });
-
-      // Αναζήτηση κατά την πληκτρολόγηση
-      var input = document.getElementById('search-box');
-      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-      // Αναζήτηση βασισμένη σε γεωγραφικές συντεταγμένες
-      input.addEventListener('input', function() {
-        searchKml(input.value);
-      });
-    }
-
-    function searchKml(query) {
-      // Εδώ μπορείτε να προσθέσετε τον κώδικα αναζήτησης για το KML
-      // Μπορείτε να χρησιμοποιήσετε τον kmlLayer ή τα δεδομένα του χάρτη, ανάλογα με την προτίμησή σας
-    }
-  </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+            // Αν θέλετε να φορτώσετε το KML από διακομιστή, χρησιμοποιήστε τη διεύθυνση URL του KML αρχείου
+            // Παράδειγμα: loadKML("http://example.com/path/to/your/file.kml");
+        }
+    </script>
 </body>
 </html>
