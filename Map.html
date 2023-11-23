@@ -16,7 +16,7 @@
 
   <script>
     var map;
-    var kmlLayer;
+    var dataLayer;
 
     function initMap() {
       // Αρχικές συντεταγμένες για τον χάρτη
@@ -28,10 +28,10 @@
         zoom: 8
       });
 
-      // Προσθήκη επίπεδου KML στον χάρτη
-      kmlLayer = new google.maps.KmlLayer({
-        url: 'https://drive.google.com/file/d/1FlkQiVsFSP6bCRWxqJ578eDymuSRKR7p/view?usp=drive_link',
-        map: map
+      // Δημιουργία επιπέδου δεδομένων
+      dataLayer = new google.maps.Data({
+        map: map,
+        url: 'ΤΟ ΑΡΧΕΙΟ ΣΑΣ.kml'
       });
 
       // Αναζήτηση κατά την πληκτρολόγηση
@@ -45,25 +45,26 @@
     }
 
     function searchKml(query) {
-      // Αναζήτηση στα δεδομένα του KML
-      var placemarks = kmlLayer.getPlacemarks();
-      var bounds = new google.maps.LatLngBounds();
+      // Επαναφορά του επιπέδου δεδομένων για να αποφευχθούν τα διπλότυπα
+      dataLayer.setMap(null);
+      dataLayer = new google.maps.Data({
+        map: map,
+        url: https://drive.google.com/file/d/1FlkQiVsFSP6bCRWxqJ578eDymuSRKR7p/view?usp=drive_link'
+      });
 
-      placemarks.forEach(function(placemark) {
-        var name = placemark.name.toLowerCase();
-        if (name.includes(query.toLowerCase())) {
-          var geometry = placemark.geometry;
+      // Αναζήτηση στα δεδομένα του KML
+      dataLayer.addListener('addfeature', function(event) {
+        var name = event.feature.getProperty('name');
+        if (name && name.toLowerCase().includes(query.toLowerCase())) {
+          var geometry = event.feature.getGeometry();
           if (geometry.getType() === 'Point') {
-            var location = geometry.getLocation();
-            bounds.extend(location);
-            createMarker(location, placemark.name);
+            var location = geometry.get();
+            createMarker(location, name);
           } else if (geometry.getType() === 'Polygon') {
             // Εδώ μπορείτε να χειριστείτε πολύγωνα
           }
         }
       });
-
-      map.fitBounds(bounds);
     }
 
     function createMarker(location, name) {
