@@ -12,7 +12,7 @@
 </head>
 <body>
     <div id="map"></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap&libraries=places" async defer></script>
     <script>
         function initMap() {
             var map = new google.maps.Map(document.getElementById('map'), {
@@ -27,12 +27,23 @@
                     map: map
                 });
             }
-          loadKML("https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml");
-            // Αν θέλετε να φορτώσετε το KML από τοπικό αρχείο, χρησιμοποιήστε τοπική διεύθυνση URL
-            // Παράδειγμα: loadKML("http://localhost/path/to/your/file.kml");
 
-            // Αν θέλετε να φορτώσετε το KML από διακομιστή, χρησιμοποιήστε τη διεύθυνση URL του KML αρχείου
-            // Παράδειγμα: loadKML("http://example.com/path/to/your/file.kml");
+            // Φορτώστε το συγκεκριμένο KML αρχείο
+            loadKML("https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml");
+
+            // Προσθήκη μπάρας αναζήτησης
+            var input = document.createElement('input');
+            input.id = 'pac-input';
+            input.type = 'text';
+            input.placeholder = 'Search location...';
+
+            var controls = document.createElement('div');
+            controls.appendChild(input);
+            controls.style.marginTop = '10px';
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(controls);
+
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', map);
         }
     </script>
 </body>
