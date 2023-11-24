@@ -37,10 +37,6 @@
         url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
         map: map
       });
-
-      kmlLayer.addListener('click', function(event) {
-        showResultOnMap(event.featureData.name);
-      });
     }
 
     function search() {
@@ -49,6 +45,10 @@
       resultsContainer.innerHTML = ''; // Καθαρίζει τα προηγούμενα αποτελέσματα
 
       var foundResults = [];
+
+      kmlLayer.addListener('click', function(event) {
+        showResultOnMap(event.featureData.name);
+      });
 
       kmlLayer.addListener('metadata_changed', function() {
         var metadata = kmlLayer.getMetadata();
@@ -62,6 +62,12 @@
         if (foundResults.length > 0) {
           // Εμφανίστε τα αποτελέσματα
           resultsContainer.innerHTML = 'Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', ');
+
+          // Προσθήκη συμβάντος κλικ σε κάθε αποτέλεσμα
+          resultsContainer.addEventListener('click', function() {
+            // Εμφανίστε το αποτέλεσμα στον χάρτη
+            showResultOnMap(foundResults[0]);
+          });
         } else {
           resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
         }
