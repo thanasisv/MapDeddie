@@ -1,21 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Map Page</title>
-    <!-- Συμπερίληψη των JavaScript αρχείων του Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+<!-- Συμπερίληψη των JavaScript αρχείων του Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=ΤΟ_API_KEY_ΣΑΣ&callback=initMap" async defer></script>
 </head>
 
 <body>
     <!-- Περιοχή όπου θα εμφανιστεί ο χάρτης -->
     <div id="map" style="height: 400px;"></div>
 
+    <!-- Κουτί αναζήτησης αρχείου KML -->
+    <input type="file" accept=".kml" onchange="handleFile(this.files)" />
+
+    <!-- Πεδίο κειμένου αναζήτησης -->
+    <input type="text" placeholder="Αναζήτηση..." oninput="searchKmlLayer(this.value)" />
+
     <!-- Συμπερίληψη του JavaScript κώδικα -->
     <script>
         var map;
+        var kmlLayer;
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -23,51 +23,40 @@
                 zoom: 8
             });
 
-            // Προσθήκη φόρτωσης KML αρχείου
-            var kmlLayer = new google.maps.KmlLayer({
-                url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
-                map: map
-            });
-
-            // Κώδικας για τη συνέχεια...
+            // Φορτώστε εδώ το KML από ένα URL ή αφήστε τον χρήστη να το επιλέξει με το κουτί αναζήτησης αρχείου
         }
 
-        function searchKML(request, callback) {
-            var ret = [];
-            if (!searchData) return;
-            for (var i = 0; i < searchData.length; i++) {
-                // Εισάγετε αναζήτηση απόστασης. Συνεχίστε αν είναι πολύ μακριά
-                if (searchData[i].description.indexOf(request.keyword) !== -1 ||
-                    searchData[i].name.indexOf(request.keyword) !== -1) {
-                    ret.push(searchData[i]);
-                }
+        function handleFile(files) {
+            var file = files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var kmlData = e.target.result;
+                    loadKmlData(kmlData);
+                };
+                reader.readAsText(file);
             }
-            callback(ret);
         }
 
-        function createMarkerKML(place) {
-            var loc = place.Point.coordinates.split(",");
-            var marker = new google.maps.Marker({
+        function loadKmlData(kmlData) {
+            kmlLayer = new google.maps.KmlLayer({
                 map: map,
-                position: new google.maps.LatLng(loc[1], loc[0])
-            });
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.setContent(place.name);
-                infowindow.open(map, marker);
+                suppressInfoWindows: true,
+                preserveViewport: false,
+                kmzData: kmlData
             });
         }
 
-        function searchMap(str) {
-            var request = {
-                location: map.getCenter(),
-                radius: '2500',
-                keyword: str
-            };
-            service.radarSearch(request, callback); // κανονική αναζήτηση
-            searchKML(request, function (results) {
-                for (var i = 0; i < results.length; i++) {
-                    createMarkerKML(results[i]);
-                }
+        function searchKmlLayer(keyword) {
+            if (!kmlLayer) return;
+
+            kmlLayer.setMap(null); // Καθαρισμός του προηγούμενου KML Layer
+
+            kmlLayer = new google.maps.KmlLayer({
+                map: map,
+                suppressInfoWindows: true,
+                preserveViewport: false,
+                url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml?search=' + encodeURIComponent(keyword)
             });
         }
     </script>
