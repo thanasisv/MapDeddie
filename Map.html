@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Map Page</title>
+    <title>KML Search</title>
     <!-- Συμπερίληψη των JavaScript αρχείων του Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
 </head>
@@ -13,90 +13,84 @@
     <!-- Περιοχή όπου θα εμφανιστεί ο χάρτης -->
     <div id="map" style="height: 400px;"></div>
 
-    <!-- Κουτί αναζήτησης αρχείου KML -->
-    <input type="file" accept=".kml" onchange="handleFile(this.files)" />
-
     <!-- Πεδίο κειμένου αναζήτησης -->
     <input type="text" placeholder="Αναζήτηση..." oninput="searchKmlLayer(this.value)" />
 
     <!-- Συμπερίληψη του JavaScript κώδικα -->
     <script>
         var map;
-        var kmlLayer;
-        var searchData;
+        var markers = [];
+        var infowindow;
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: -34.397, lng: 150.644 },
-                zoom: 8
+                center: { lat: 0, lng: 0 },
+                zoom: 2
             });
 
-            // Φόρτωση του KML από συγκεκριμένο URL κατά την εκκίνηση του χάρτη
+            infowindow = new google.maps.InfoWindow();
+
+            // Φόρτωση του KML αρχείου
             loadKmlFromUrl('https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml');
         }
 
-        function handleFile(files) {
-            var file = files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    var kmlData = e.target.result;
-                    searchData = parseKmlData(kmlData);
-                };
-                reader.readAsText(file);
-            }
-        }
+        function loadKmlFromUrl(url) {
+            var kmlLayer = new google.maps.KmlLayer({
+                map: map,
+                url: url,
+                suppressInfoWindows: true,
+                preserveViewport: false
+            });
 
-        function parseKmlData(kmlData) {
-            // Εδώ πρέπει να προσαρμοστεί ο κώδικας για το parsing του KML και την εξαγωγή των δεδομένων αναζήτησης
-            // Επιστρέφουμε τα δεδομένα που χρειαζόμαστε για την αναζήτηση
+            // Προσθήκη ακροατή για το γεγονός 'click' στα στοιχεία του KML
+            kmlLayer.addListener('click', function (event) {
+                var content = event.featureData.description;
+                infowindow.setContent(content);
+                infowindow.setPosition(event.latLng);
+                infowindow.setOptions({ pixelOffset: new google.maps.Size(0, -30) });
+                infowindow.open(map);
+            });
         }
 
         function searchKmlLayer(keyword) {
-            if (!searchData) return;
+            // Καθαρίζουμε τον χάρτη από τα προηγούμενα markers
+            clearMarkers();
 
-            // Εδώ πρέπει να προσαρμοστεί ο κώδικας για την αναζήτηση μέσα στα δεδομένα του KML
-            var results = searchData.filter(function (item) {
-                return item.name.includes(keyword) || item.description.includes(keyword);
-            });
+            // Αναζήτηση εντός των στοιχείων του KML
+            var placemarks = map.data.forEach(function (feature) {
+                var description = feature.getProperty('description');
+                var name = feature.getProperty('name');
 
-            // Καθαρίζουμε τον χάρτη από προηγούμενα markers
-            clearMap();
-
-            // Δημιουργούμε νέα markers για τα αποτελέσματα
-            results.forEach(function (result) {
-                createMarker(result);
-            });
-        }
-
-        function loadKmlFromUrl(url) {
-            if (kmlLayer) {
-                kmlLayer.setMap(null); // Καθαρισμός του προηγούμενου KML Layer
-            }
-
-            kmlLayer = new google.maps.KmlLayer({
-                map: map,
-                suppressInfoWindows: true,
-                preserveViewport: false,
-                url: url
+                if (description && description.includes(keyword)) {
+                    createMarker(feature.getGeometry().get(), name, description);
+                } else if (name && name.includes(keyword)) {
+                    createMarker(feature.getGeometry().get(), name, description);
+                }
             });
         }
 
-        function createMarker(place) {
-            var loc = place.Point.coordinates.split(",");
+        function createMarker(coordinates, name, description) {
             var marker = new google.maps.Marker({
+                position: coordinates,
                 map: map,
-                position: new google.maps.LatLng(loc[1], loc[0])
+                title: name
             });
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.setContent(place.name);
+
+            marker.addListener('click', function () {
+                infowindow.setContent(description);
                 infowindow.open(map, marker);
             });
+
+            markers.push(marker);
         }
 
-        function clearMap() {
-            // Καθαρίζουμε τον χάρτη από τα markers
-            // Εδώ πρέπει να προσαρμοστεί ο κώδικας για τον καθαρισμό του χάρτη
+        function clearMarkers() {
+            // Καθαρίζουμε τον χάρτη από τα προηγούμενα markers
+            markers.forEach(function (marker) {
+                marker.setMap(null);
+            });
+
+            markers = [];
         }
     </script>
 </body>
