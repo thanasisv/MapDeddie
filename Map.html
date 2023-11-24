@@ -1,24 +1,58 @@
-<html>
-  <head>
-    <title>Place Searches</title>
-    <script src="https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml"></script>
+// Προσθέστε το API key στην αρχή
+var map;
 
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script type="module" src="./index.js"></script>
-  </head>
-  <body>
-    <div id="map"></div>
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8,
+        // Εισαγωγή του API key εδώ
+        apiKey: 'AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90'
+    });
 
-    <!-- 
-      The `defer` attribute causes the callback to execute after the full HTML
-      document has been parsed. For non-blocking uses, avoiding race conditions,
-      and consistent behavior across browsers, consider loading using Promises.
-      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
-      for more information.
-      -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap&libraries=places&v=weekly"
-      defer
-    ></script>
-  </body>
-</html>
+    // Προσθήκη φόρτωσης KML αρχείου
+    var kmlLayer = new google.maps.KmlLayer({
+        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
+        map: map
+    });
+
+    // Κώδικας για τη συνέχεια...
+}
+
+function searchKML(request, callback) {
+    var ret = [];
+    if (!searchData) return;
+    for (var i = 0; i < searchData.length; i++) {
+        // Εισάγετε αναζήτηση απόστασης. Συνεχίστε αν είναι πολύ μακριά
+        if (searchData[i].description.indexOf(request.keyword) !== -1 ||
+            searchData[i].name.indexOf(request.keyword) !== -1) {
+            ret.push(searchData[i]);
+        }
+    }
+    callback(ret);
+}
+
+function createMarkerKML(place) {
+    var loc = place.Point.coordinates.split(",");
+    var marker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(loc[1], loc[0])
+    });
+    google.maps.event.addListener(marker, 'click', function () {
+        infowindow.setContent(place.name);
+        infowindow.open(map, marker);
+    });
+}
+
+function searchMap(str) {
+    var request = {
+        location: map.getCenter(),
+        radius: '2500',
+        keyword: str
+    };
+    service.radarSearch(request, callback); // κανονική αναζήτηση
+    searchKML(request, function (results) {
+        for (var i = 0; i < results.length; i++) {
+            createMarkerKML(results[i]);
+        }
+    });
+}
