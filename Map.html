@@ -15,6 +15,10 @@
       color: blue;
       text-decoration: underline;
     }
+
+    #resultsList {
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -22,6 +26,7 @@
   <button onclick="search()">Αναζήτηση</button>
   <div id="map"></div>
   <div id="results"></div>
+  <div id="resultsList"></div>
 
   <script>
     var map;
@@ -42,7 +47,9 @@
     function search() {
       var name = document.getElementById('searchInput').value;
       var resultsContainer = document.getElementById('results');
+      var resultsListContainer = document.getElementById('resultsList');
       resultsContainer.innerHTML = ''; // Καθαρίζει τα προηγούμενα αποτελέσματα
+      resultsListContainer.innerHTML = ''; // Καθαρίζει τη λίστα αποτελεσμάτων
 
       var foundResults = [];
 
@@ -63,11 +70,14 @@
           // Εμφανίστε τα αποτελέσματα
           resultsContainer.innerHTML = 'Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', ');
 
-          // Προσθήκη συμβάντος κλικ σε κάθε αποτέλεσμα
-          resultsContainer.addEventListener('click', function() {
-            // Εμφανίστε το αποτέλεσμα στον χάρτη
-            showResultOnMap(foundResults[0]);
-          });
+          // Προσθήκη στη λίστα αποτελεσμάτων
+          var list = document.createElement('ul');
+          for (var i = 0; i < foundResults.length; i++) {
+            var item = document.createElement('li');
+            item.appendChild(document.createTextNode(foundResults[i]));
+            list.appendChild(item);
+          }
+          resultsListContainer.appendChild(list);
         } else {
           resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
         }
