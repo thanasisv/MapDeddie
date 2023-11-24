@@ -8,7 +8,7 @@
   <style>
     #map {
       height: 400px;
-      width: 100%;
+      width: 70%;
     }
 
     #results {
@@ -36,8 +36,8 @@
 
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644},
-        zoom: 8
+        center: {lat: 38.015, lng: 23.735},
+        zoom: 12
       });
 
       geoXml = new geoXML3.parser({
@@ -47,15 +47,15 @@
         zoom: false
       });
 
-      geoXml.parse('https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml');
+      geoXml.parse('https://thanasisv.github.io/MapDeddie/KML%20FOR%20NAVIGATOR.kml');
     }
 
     function search() {
       var name = $('#searchInput').val().toLowerCase();
       var resultsContainer = $('#results');
       var resultsListContainer = $('#resultsList');
-      resultsContainer.html(''); // Καθαρίζει τα προηγούμενα αποτελέσματα
-      resultsListContainer.html(''); // Καθαρίζει τη λίστα αποτελεσμάτων
+      resultsContainer.html('');
+      resultsListContainer.html('');
 
       var foundResults = [];
 
@@ -69,10 +69,8 @@
       }
 
       if (foundResults.length > 0) {
-        // Εμφανίστε τα αποτελέσματα
         resultsContainer.html('Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', '));
 
-        // Προσθήκη στη λίστα αποτελεσμάτων
         var list = $('<ul></ul>');
         for (var i = 0; i < foundResults.length; i++) {
           var item = $('<li></li>').text(foundResults[i]);
