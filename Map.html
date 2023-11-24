@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Αναζήτηση σε Google Maps</title>
+  <title>Αναζήτηση σε Google Maps με GeoJSON</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <style>
     #map {
-      height: 200px;
+      height: 400px;
       width: 100%;
     }
 
@@ -20,7 +21,6 @@
 
   <script>
     var map;
-    var kmlLayer;
     var markers = [];
 
     function initMap() {
@@ -29,10 +29,18 @@
         zoom: 12
       });
 
-      kmlLayer = new google.maps.KmlLayer({
-        url: 'https://thanasisv.github.io/MapDeddie/KML%20FOR%20NAVIGATOR.kml',
-        map: map
-      });
+      // Φόρτωση των δεδομένων KML ως GeoJSON μέσω της υπηρεσίας του mygeodata.cloud
+      var kmlUrl = 'https://thanasisv.github.io/MapDeddie/KML%20FOR%20NAVIGATOR.kml';
+      var geoJsonUrl = 'https://mygeodata.cloud/api/v1/convert?from=kml&to=geojson&url=' + kmlUrl;
+
+      axios.get(geoJsonUrl)
+        .then(function (response) {
+          var geoJsonData = response.data;
+          processGeoJson(geoJsonData);
+        })
+        .catch(function (error) {
+          console.error('Σφάλμα κατά τη φόρτωση των δεδομένων:', error);
+        });
 
       // Προσθήκη ακροατή γεγονότος στο πεδίο αναζήτησης
       document.getElementById('searchInput').addEventListener('input', function() {
@@ -40,19 +48,26 @@
       });
     }
 
+    function processGeoJson(geoJsonData) {
+      // Δημιουργία ενός Data Layer για τα δεδομένα GeoJSON
+      var dataLayer = new google.maps.Data();
+      dataLayer.addGeoJson(geoJsonData);
+      dataLayer.setMap(map);
+    }
+
     function search(name) {
       // Καθαρισμός προηγούμενων στοιχείων
       clearMarkers();
-      
-      kmlLayer.metadata.forEach(function (placemark, index) {
-        var placemarkName = placemark.name.toLowerCase();
 
-        if (placemarkName.includes(name)) {
+      // Αναζήτηση μέσω του Data Layer
+      map.data.forEach(function (feature) {
+        var featureName = feature.getProperty('name') ? feature.getProperty('name').toLowerCase() : '';
+        if (featureName.includes(name)) {
           // Δημιουργία σημείου (marker) για τα αποτελέσματα
           var marker = new google.maps.Marker({
-            position: placemark.latLng,
+            position: feature.getGeometry().get(),
             map: map,
-            title: placemarkName
+            title: featureName
           });
 
           markers.push(marker);
