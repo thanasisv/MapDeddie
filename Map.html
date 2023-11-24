@@ -1,34 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Αναζήτηση σε Google Maps με GeoXML3 και jQuery</title>
+  <title>Αναζήτηση σε Google Maps με GeoXML3</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
   <script type="text/javascript" src="https://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <style>
     #map {
       height: 400px;
-      width: 70%;
+      width: 100%;
     }
 
-    #results {
-      margin-top: 10px;
-      cursor: pointer;
-      color: blue;
-      text-decoration: underline;
-    }
-
-    #resultsList {
+    #searchInput {
       margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <input type="text" id="searchInput" placeholder="Εισαγωγή ονόματος">
-  <button onclick="search()">Αναζήτηση</button>
   <div id="map"></div>
-  <div id="results"></div>
-  <div id="resultsList"></div>
 
   <script>
     var map;
@@ -44,41 +33,34 @@
         map: map,
         singleInfoWindow: true,
         suppressInfoWindows: true,
-        zoom: false
+        zoom: false,
+        afterParse: function() {
+          // Προσθέστε εδώ οποιαδήποτε πρόσθετη λειτουργικότητα
+        }
       });
 
       geoXml.parse('https://thanasisv.github.io/MapDeddie/KML%20FOR%20NAVIGATOR.kml');
+
+      // Προσθέστε έναν ακροατή γεγονότων για το πεδίο αναζήτησης
+      document.getElementById('searchInput').addEventListener('input', function() {
+        search(this.value.toLowerCase());
+      });
     }
 
-    function search() {
-      var name = $('#searchInput').val().toLowerCase();
-      var resultsContainer = $('#results');
-      var resultsListContainer = $('#resultsList');
-      resultsContainer.html('');
-      resultsListContainer.html('');
-
-      var foundResults = [];
+    function search(name) {
+      geoXml.hideDocument();
+      geoXml.showBalloon(null);
 
       for (var i = 0; i < geoXml.docs[0].placemarks.length; i++) {
         var placemark = geoXml.docs[0].placemarks[i];
         var placemarkName = placemark.name.toLowerCase();
         
         if (placemarkName.includes(name)) {
-          foundResults.push(placemarkName);
+          // Εμφανίστε μόνο τα στοιχεία που ταιριάζουν με την αναζήτηση
+          placemark.show();
+        } else {
+          placemark.hide();
         }
-      }
-
-      if (foundResults.length > 0) {
-        resultsContainer.html('Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', '));
-
-        var list = $('<ul></ul>');
-        for (var i = 0; i < foundResults.length; i++) {
-          var item = $('<li></li>').text(foundResults[i]);
-          list.append(item);
-        }
-        resultsListContainer.append(list);
-      } else {
-        resultsContainer.html('Δεν βρέθηκαν αποτελέσματα.');
       }
     }
   </script>
