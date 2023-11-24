@@ -1,121 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KML Search</title>
-    <!-- Συμπερίληψη των JavaScript αρχείων του Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+  <title>Αναζήτηση σε Google Maps</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+
+    #results {
+      margin-top: 10px;
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+    }
+  </style>
 </head>
-
 <body>
-    <!-- Περιοχή όπου θα εμφανιστεί ο χάρτης -->
-    <div id="map" style="height: 400px;"></div>
+  <input type="text" id="searchInput" placeholder="Εισαγωγή ονόματος">
+  <button onclick="search()">Αναζήτηση</button>
+  <div id="map"></div>
+  <div id="results"></div>
 
-    <!-- Πεδίο κειμένου αναζήτησης -->
-    <input type="text" id="searchInput" placeholder="Αναζήτηση..." />
+  <script>
+    var map;
+    var kmlLayer;
 
-    <!-- Κουμπί Αναζήτησης -->
-    <button onclick="searchKml()">Αναζήτηση</button>
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -34.397, lng: 150.644},
+        zoom: 8
+      });
 
-    <!-- Περιοχή για εμφάνιση αποτελεσμάτων -->
-    <div id="searchResults"></div>
+      kmlLayer = new google.maps.KmlLayer({
+        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
+        map: map
+      });
+    }
 
-    <!-- Συμπερίληψη του JavaScript κώδικα -->
-    <script>
-        var map;
-        var markers = [];
-        var infowindow;
+    function search() {
+      var name = document.getElementById('searchInput').value;
+      var resultsContainer = document.getElementById('results');
+      resultsContainer.innerHTML = ''; // Καθαρίζει τα προηγούμενα αποτελέσματα
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 0, lng: 0 },
-                zoom: 2
-            });
+      kmlLayer.addListener('metadata_changed', function() {
+        var metadata = kmlLayer.getMetadata();
+        var foundResults = [];
 
-            infowindow = new google.maps.InfoWindow();
-
-            // Φόρτωση του KML αρχείου
-            loadKmlFromUrl('https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml');
+        for (var i = 0; i < metadata.length; i++) {
+          if (metadata[i].name === name) {
+            foundResults.push(metadata[i].name);
+          }
         }
 
-        function loadKmlFromUrl(url) {
-            var kmlLayer = new google.maps.KmlLayer({
-                map: map,
-                url: url,
-                suppressInfoWindows: true,
-                preserveViewport: false
-            });
+        if (foundResults.length > 0) {
+          // Εμφανίστε τα αποτελέσματα
+          resultsContainer.innerHTML = 'Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', ');
 
-            // Προσθήκη ακροατή για το γεγονός 'click' στα στοιχεία του KML
-            kmlLayer.addListener('click', function (event) {
-                var content = event.featureData.description;
-                infowindow.setContent(content);
-                infowindow.setPosition(event.latLng);
-                infowindow.setOptions({ pixelOffset: new google.maps.Size(0, -30) });
-                infowindow.open(map);
-            });
+          // Προσθήκη συμβάντος κλικ σε κάθε αποτέλεσμα
+          resultsContainer.addEventListener('click', function() {
+            // Εμφανίστε το αποτέλεσμα στον χάρτη
+            showResultOnMap(foundResults[0]);
+          });
+        } else {
+          resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
         }
+      });
+    }
 
-        function searchKml() {
-            var keyword = document.getElementById('searchInput').value;
-
-            // Καθαρίζουμε τον χάρτη από τα προηγούμενα markers
-            clearMarkers();
-
-            // Αναζήτηση εντός των στοιχείων του KML
-            var results = [];
-            map.data.forEach(function (feature) {
-                var description = feature.getProperty('description');
-                var name = feature.getProperty('name');
-
-                console.log('Name:', name, 'Description:', description); // Προσθήκη εκτύπωσης
-
-                if (description && description.includes(keyword)) {
-                    results.push({ name: name, description: description });
-                    createMarker(feature.getGeometry().get(), name, description);
-                } else if (name && name.includes(keyword)) {
-                    results.push({ name: name, description: description });
-                    createMarker(feature.getGeometry().get(), name, description);
-                }
-            });
-
-            console.log('Search Results:', results); // Προσθήκη εκτύπωσης
-
-            // Εμφάνιση αποτελεσμάτων
-            displayResults(results);
-        }
-
-        function createMarker(coordinates, name, description) {
-            var marker = new google.maps.Marker({
-                position: coordinates,
-                map: map,
-                title: name
-            });
-
-            marker.addListener('click', function () {
-                infowindow.setContent(description);
-                infowindow.open(map, marker);
-            });
-
-            markers.push(marker);
-        }
-
-        function clearMarkers() {
-            // Καθαρίζουμε τον χάρτη από τα προηγούμενα markers
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
-
-            markers = [];
-        }
-
-        function displayResults(results) {
-            var resultsContainer = document.getElementById('searchResults');
-            resultsContainer.innerHTML = ''; // Καθαρίζουμε
-            }
-    </script>
+    function showResultOnMap(result) {
+      // Αναζήτηση του αποτελέσματος στον χάρτη
+      // Εδώ μπορείτε να προσθέσετε κώδικα για την εμφάνιση του αποτελέσματος στον χάρτη
+      console.log('Εμφανίζεται στο χάρτη:', result);
+    }
+  </script>
 </body>
-
 </html>
