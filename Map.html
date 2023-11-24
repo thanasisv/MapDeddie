@@ -1,5 +1,12 @@
-<!-- Συμπερίληψη των JavaScript αρχείων του Google Maps API -->
-<script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Map Page</title>
+    <!-- Συμπερίληψη των JavaScript αρχείων του Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
 </head>
 
 <body>
@@ -16,6 +23,7 @@
     <script>
         var map;
         var kmlLayer;
+        var searchData;
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -23,7 +31,7 @@
                 zoom: 8
             });
 
-            // Φορτώστε εδώ το KML από ένα URL ή αφήστε τον χρήστη να το επιλέξει με το κουτί αναζήτησης αρχείου
+            // Δεν φορτώνουμε αυτόματα το KML αρχείο. Η φόρτωση γίνεται όταν ο χρήστης επιλέξει ένα αρχείο.
         }
 
         function handleFile(files) {
@@ -32,32 +40,49 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var kmlData = e.target.result;
-                    loadKmlData(kmlData);
+                    searchData = parseKmlData(kmlData);
                 };
                 reader.readAsText(file);
             }
         }
 
-        function loadKmlData(kmlData) {
-            kmlLayer = new google.maps.KmlLayer({
-                map: map,
-                suppressInfoWindows: true,
-                preserveViewport: false,
-                kmzData: kmlData
-            });
+        function parseKmlData(kmlData) {
+            // Εδώ πρέπει να προσαρμοστεί ο κώδικας για το parsing του KML και την εξαγωγή των δεδομένων αναζήτησης
+            // Επιστρέφουμε τα δεδομένα που χρειαζόμαστε για την αναζήτηση
         }
 
         function searchKmlLayer(keyword) {
-            if (!kmlLayer) return;
+            if (!searchData) return;
 
-            kmlLayer.setMap(null); // Καθαρισμός του προηγούμενου KML Layer
-
-            kmlLayer = new google.maps.KmlLayer({
-                map: map,
-                suppressInfoWindows: true,
-                preserveViewport: false,
-                url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml?search=' + encodeURIComponent(keyword)
+            // Εδώ πρέπει να προσαρμοστεί ο κώδικας για την αναζήτηση μέσα στα δεδομένα του KML
+            var results = searchData.filter(function (item) {
+                return item.name.includes(keyword) || item.description.includes(keyword);
             });
+
+            // Καθαρίζουμε τον χάρτη από προηγούμενα markers
+            clearMap();
+
+            // Δημιουργούμε νέα markers για τα αποτελέσματα
+            results.forEach(function (result) {
+                createMarker(result);
+            });
+        }
+
+        function createMarker(place) {
+            var loc = place.Point.coordinates.split(",");
+            var marker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(loc[1], loc[0])
+            });
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(place.name);
+                infowindow.open(map, marker);
+            });
+        }
+
+        function clearMap() {
+            // Καθαρίζουμε τον χάρτη από τα markers
+            // Εδώ πρέπει να προσαρμοστεί ο κώδικας για τον καθαρισμό του χάρτη
         }
     </script>
 </body>
