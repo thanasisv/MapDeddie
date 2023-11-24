@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Αναζήτηση σε Google Maps με GeoXML3</title>
+  <title>Αναζήτηση σε Google Maps με GeoXML3 και jQuery</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
   <script type="text/javascript" src="https://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <style>
     #map {
-      height: 200px;
+      height: 400px;
       width: 100%;
     }
 
@@ -23,7 +24,8 @@
   </style>
 </head>
 <body>
-  <input type="text" id="searchInput" placeholder="Εισαγωγή ονόματος" oninput="search()">
+  <input type="text" id="searchInput" placeholder="Εισαγωγή ονόματος">
+  <button onclick="search()">Αναζήτηση</button>
   <div id="map"></div>
   <div id="results"></div>
   <div id="resultsList"></div>
@@ -49,40 +51,37 @@
     }
 
     function search() {
-      var name = document.getElementById('searchInput').value.toLowerCase();
-      var resultsContainer = document.getElementById('results');
-      var resultsListContainer = document.getElementById('resultsList');
-      resultsContainer.innerHTML = ''; // Καθαρίζει τα προηγούμενα αποτελέσματα
-      resultsListContainer.innerHTML = ''; // Καθαρίζει τη λίστα αποτελεσμάτων
+      var name = $('#searchInput').val().toLowerCase();
+      var resultsContainer = $('#results');
+      var resultsListContainer = $('#resultsList');
+      resultsContainer.html(''); // Καθαρίζει τα προηγούμενα αποτελέσματα
+      resultsListContainer.html(''); // Καθαρίζει τη λίστα αποτελεσμάτων
 
       var foundResults = [];
 
-      google.maps.event.addListener(geoXml, 'parsed', function() {
-        for (var i = 0; i < geoXml.docs[0].placemarks.length; i++) {
-          var placemark = geoXml.docs[0].placemarks[i];
-          var placemarkName = placemark.name.toLowerCase();
-          
-          if (placemarkName.includes(name)) {
-            foundResults.push(placemarkName);
-          }
+      for (var i = 0; i < geoXml.docs[0].placemarks.length; i++) {
+        var placemark = geoXml.docs[0].placemarks[i];
+        var placemarkName = placemark.name.toLowerCase();
+        
+        if (placemarkName.includes(name)) {
+          foundResults.push(placemarkName);
         }
+      }
 
-        if (foundResults.length > 0) {
-          // Εμφανίστε τα αποτελέσματα
-          resultsContainer.innerHTML = 'Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', ');
+      if (foundResults.length > 0) {
+        // Εμφανίστε τα αποτελέσματα
+        resultsContainer.html('Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', '));
 
-          // Προσθήκη στη λίστα αποτελεσμάτων
-          var list = document.createElement('ul');
-          for (var i = 0; i < foundResults.length; i++) {
-            var item = document.createElement('li');
-            item.appendChild(document.createTextNode(foundResults[i]));
-            list.appendChild(item);
-          }
-          resultsListContainer.appendChild(list);
-        } else {
-          resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
+        // Προσθήκη στη λίστα αποτελεσμάτων
+        var list = $('<ul></ul>');
+        for (var i = 0; i < foundResults.length; i++) {
+          var item = $('<li></li>').text(foundResults[i]);
+          list.append(item);
         }
-      });
+        resultsListContainer.append(list);
+      } else {
+        resultsContainer.html('Δεν βρέθηκαν αποτελέσματα.');
+      }
     }
   </script>
 </body>
