@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Αναζήτηση σε Google Maps</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
   <style>
     #map {
       height: 400px;
@@ -44,9 +44,15 @@
       var resultsContainer = document.getElementById('results');
       resultsContainer.innerHTML = ''; // Καθαρίζει τα προηγούμενα αποτελέσματα
 
+      kmlLayer.addListener('click', function(event) {
+        // Προσθήκη συμβάντος κλικ σε όλα τα αντικείμενα του KML
+        showResultOnMap(event.featureData.name);
+      });
+
+      var foundResults = [];
+
       kmlLayer.addListener('metadata_changed', function() {
         var metadata = kmlLayer.getMetadata();
-        var foundResults = [];
 
         for (var i = 0; i < metadata.length; i++) {
           if (metadata[i].name === name) {
@@ -57,12 +63,6 @@
         if (foundResults.length > 0) {
           // Εμφανίστε τα αποτελέσματα
           resultsContainer.innerHTML = 'Βρέθηκαν τα εξής αποτελέσματα: ' + foundResults.join(', ');
-
-          // Προσθήκη συμβάντος κλικ σε κάθε αποτέλεσμα
-          resultsContainer.addEventListener('click', function() {
-            // Εμφανίστε το αποτέλεσμα στον χάρτη
-            showResultOnMap(foundResults[0]);
-          });
         } else {
           resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
         }
