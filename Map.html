@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Αναζήτηση σε Google Maps</title>
+  <title>Αναζήτηση σε Google Maps με GeoXML3</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap" async defer></script>
+  <script type="text/javascript" src="https://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
   <style>
     #map {
       height: 400px;
@@ -29,7 +30,7 @@
 
   <script>
     var map;
-    var kmlLayer;
+    var geoXml;
 
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
@@ -37,14 +38,18 @@
         zoom: 8
       });
 
-      kmlLayer = new google.maps.KmlLayer({
-        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
-        map: map
+      geoXml = new geoXML3.parser({
+        map: map,
+        singleInfoWindow: true,
+        suppressInfoWindows: true,
+        zoom: false
       });
+
+      geoXml.parse('https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml');
     }
 
     function search() {
-      var name = document.getElementById('searchInput').value;
+      var name = document.getElementById('searchInput').value.toLowerCase();
       var resultsContainer = document.getElementById('results');
       var resultsListContainer = document.getElementById('resultsList');
       resultsContainer.innerHTML = ''; // Καθαρίζει τα προηγούμενα αποτελέσματα
@@ -52,16 +57,13 @@
 
       var foundResults = [];
 
-      kmlLayer.addListener('click', function(event) {
-        showResultOnMap(event.featureData.name);
-      });
-
-      kmlLayer.addListener('metadata_changed', function() {
-        var metadata = kmlLayer.getMetadata();
-
-        for (var i = 0; i < metadata.length; i++) {
-          if (metadata[i].name.toLowerCase().includes(name.toLowerCase())) {
-            foundResults.push(metadata[i].name);
+      google.maps.event.addListener(geoXml, 'parsed', function() {
+        for (var i = 0; i < geoXml.docs[0].placemarks.length; i++) {
+          var placemark = geoXml.docs[0].placemarks[i];
+          var placemarkName = placemark.name.toLowerCase();
+          
+          if (placemarkName.includes(name)) {
+            foundResults.push(placemarkName);
           }
         }
 
@@ -81,12 +83,6 @@
           resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
         }
       });
-    }
-
-    function showResultOnMap(result) {
-      // Αναζήτηση του αποτελέσματος στον χάρτη
-      alert('Εμφανίζεται στο χάρτη: ' + result);
-      // Εδώ μπορείτε να προσθέσετε περισσότερο κώδικα για την εμφάνιση του αποτελέσματος στον χάρτη
     }
   </script>
 </body>
