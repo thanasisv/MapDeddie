@@ -37,7 +37,7 @@
             infowindow = new google.maps.InfoWindow();
 
             // Φόρτωση του KML αρχείου
-            loadKmlFromUrl('https://drive.google.com/file/d/1bI0pKaTFY0Rd9oD0vbDqlchZ8FUC2K8m/view?usp=drivesdk');
+            loadKmlFromUrl('https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml');
         }
 
         function loadKmlFromUrl(url) {
@@ -70,6 +70,8 @@
                 var description = feature.getProperty('description');
                 var name = feature.getProperty('name');
 
+                console.log('Name:', name, 'Description:', description); // Προσθήκη εκτύπωσης
+
                 if (description && description.includes(keyword)) {
                     results.push({ name: name, description: description });
                     createMarker(feature.getGeometry().get(), name, description);
@@ -78,6 +80,8 @@
                     createMarker(feature.getGeometry().get(), name, description);
                 }
             });
+
+            console.log('Search Results:', results); // Προσθήκη εκτύπωσης
 
             // Εμφάνιση αποτελεσμάτων
             displayResults(results);
@@ -109,19 +113,4 @@
 
         function displayResults(results) {
             var resultsContainer = document.getElementById('searchResults');
-            resultsContainer.innerHTML = ''; // Καθαρίζουμε τα προηγούμενα αποτελέσματα
-
-            if (results.length === 0) {
-                resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
-            } else {
-                results.forEach(function (result) {
-                    var resultItem = document.createElement('div');
-                    resultItem.innerHTML = '<strong>' + result.name + '</strong>: ' + result.description;
-                    resultsContainer.appendChild(resultItem);
-                });
-            }
-        }
-    </script>
-</body>
-
-</html>
+            resultsContainer.innerHTML = ''; // Καθαρίζουμε
