@@ -22,8 +22,7 @@
   </style>
 </head>
 <body>
-  <input type="text" id="searchInput" placeholder="Εισαγωγή ονόματος">
-  <button onclick="search()">Αναζήτηση</button>
+  <input type="text" id="searchInput" placeholder="Εισαγωγή ονόματος" oninput="search()">
   <div id="map"></div>
   <div id="results"></div>
   <div id="resultsList"></div>
@@ -61,7 +60,7 @@
         var metadata = kmlLayer.getMetadata();
 
         for (var i = 0; i < metadata.length; i++) {
-          if (metadata[i].name === name) {
+          if (metadata[i].name.toLowerCase().includes(name.toLowerCase())) {
             foundResults.push(metadata[i].name);
           }
         }
