@@ -14,7 +14,13 @@
     <div id="map" style="height: 400px;"></div>
 
     <!-- Πεδίο κειμένου αναζήτησης -->
-    <input type="text" placeholder="Αναζήτηση..." oninput="searchKmlLayer(this.value)" />
+    <input type="text" id="searchInput" placeholder="Αναζήτηση..." />
+
+    <!-- Κουμπί Αναζήτησης -->
+    <button onclick="searchKml()">Αναζήτηση</button>
+
+    <!-- Περιοχή για εμφάνιση αποτελεσμάτων -->
+    <div id="searchResults"></div>
 
     <!-- Συμπερίληψη του JavaScript κώδικα -->
     <script>
@@ -52,21 +58,29 @@
             });
         }
 
-        function searchKmlLayer(keyword) {
+        function searchKml() {
+            var keyword = document.getElementById('searchInput').value;
+
             // Καθαρίζουμε τον χάρτη από τα προηγούμενα markers
             clearMarkers();
 
             // Αναζήτηση εντός των στοιχείων του KML
-            var placemarks = map.data.forEach(function (feature) {
+            var results = [];
+            map.data.forEach(function (feature) {
                 var description = feature.getProperty('description');
                 var name = feature.getProperty('name');
 
                 if (description && description.includes(keyword)) {
+                    results.push({ name: name, description: description });
                     createMarker(feature.getGeometry().get(), name, description);
                 } else if (name && name.includes(keyword)) {
+                    results.push({ name: name, description: description });
                     createMarker(feature.getGeometry().get(), name, description);
                 }
             });
+
+            // Εμφάνιση αποτελεσμάτων
+            displayResults(results);
         }
 
         function createMarker(coordinates, name, description) {
@@ -91,6 +105,21 @@
             });
 
             markers = [];
+        }
+
+        function displayResults(results) {
+            var resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = ''; // Καθαρίζουμε τα προηγούμενα αποτελέσματα
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = 'Δεν βρέθηκαν αποτελέσματα.';
+            } else {
+                results.forEach(function (result) {
+                    var resultItem = document.createElement('div');
+                    resultItem.innerHTML = '<strong>' + result.name + '</strong>: ' + result.description;
+                    resultsContainer.appendChild(resultItem);
+                });
+            }
         }
     </script>
 </body>
