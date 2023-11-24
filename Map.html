@@ -31,7 +31,8 @@
                 zoom: 8
             });
 
-            // Δεν φορτώνουμε αυτόματα το KML αρχείο. Η φόρτωση γίνεται όταν ο χρήστης επιλέξει ένα αρχείο.
+            // Φόρτωση του KML από συγκεκριμένο URL κατά την εκκίνηση του χάρτη
+            loadKmlFromUrl('https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml');
         }
 
         function handleFile(files) {
@@ -65,6 +66,19 @@
             // Δημιουργούμε νέα markers για τα αποτελέσματα
             results.forEach(function (result) {
                 createMarker(result);
+            });
+        }
+
+        function loadKmlFromUrl(url) {
+            if (kmlLayer) {
+                kmlLayer.setMap(null); // Καθαρισμός του προηγούμενου KML Layer
+            }
+
+            kmlLayer = new google.maps.KmlLayer({
+                map: map,
+                suppressInfoWindows: true,
+                preserveViewport: false,
+                url: url
             });
         }
 
