@@ -28,18 +28,19 @@
         mapTypeId: 'roadmap'
       });
 
-    kmlLayer = new google.maps.KmlLayer({
-  url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
-  map: map,
-  preserveViewport: true,
-  suppressInfoWindows: true  // Εξαίρεση παραθύρων πληροφοριών του KML
-});
+      kmlLayer = new google.maps.KmlLayer({
+        url: 'https://drive.google.com/file/d/1bI0pKaTFY0Rd9oD0vbDqlchZ8FUC2K8m/view?usp=drivesdk',
+        map: map,
+        preserveViewport: true
+      });
 
-google.maps.event.addListener(kmlLayer, 'status_changed', function () {
-  if (kmlLayer.getStatus() !== 'OK') {
-    alert('Υπήρξε ένα πρόβλημα κατά τη φόρτωση του KML.');
-  }
-}
+      google.maps.event.addListener(kmlLayer, 'status_changed', function () {
+        if (kmlLayer.getStatus() !== 'OK') {
+          alert('Υπήρξε ένα πρόβλημα κατά τη φόρτωση του KML.');
+        }
+      });
+    }
+
     function requestLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
