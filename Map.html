@@ -32,9 +32,6 @@
         map: map,
         preserveViewport: true
       });
-
-      // Προσθέτουμε αυτήν τη γραμμή για να εκτελείται η initMap με την φόρτωση του API
-      initMap();
     }
 
     function requestLocation() {
@@ -45,7 +42,7 @@
             lng: position.coords.longitude
           };
           map.setCenter(pos);
-          map.setZoom(15); // Επιλογή επιθυμητού επιπέδου ζουμ
+          map.setZoom(15);
         }, function(error) {
           handleLocationError(error);
         });
@@ -58,7 +55,7 @@
       var input = document.getElementById('searchInput').value;
       var request = {
         location: map.getCenter(),
-        radius: '50000', // Ακτίνα αναζήτησης σε μέτρα
+        radius: '50000',
         query: input
       };
 
@@ -67,8 +64,6 @@
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           clearResults();
           clearMarkers();
-
-          // Εμφάνιση αποτελεσμάτων
           for (var i = 0; i < results.length; i++) {
             createMarker(results[i]);
           }
@@ -83,7 +78,6 @@
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        // Εμφάνιση πληροφοριών για το μέρος
         var infowindow = new google.maps.InfoWindow();
         infowindow.setContent(place.name);
         infowindow.open(map, this);
@@ -97,6 +91,10 @@
     function clearResults() {
       // Καθαρισμός αποτελεσμάτων
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      initMap();
+    });
   </script>
 
 </body>
