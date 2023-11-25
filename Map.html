@@ -29,9 +29,10 @@
       });
 
       kmlLayer = new google.maps.KmlLayer({
-        url: 'https://drive.google.com/file/d/1bI0pKaTFY0Rd9oD0vbDqlchZ8FUC2K8m/view?usp=drivesdk',
+        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
         map: map,
-        preserveViewport: true
+        preserveViewport: true,
+        suppressInfoWindows: true  // Εξαίρεση παραθύρων πληροφοριών του KML
       });
 
       google.maps.event.addListener(kmlLayer, 'status_changed', function () {
@@ -70,6 +71,10 @@
         }
       });
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      initMap();
+    });
   </script>
 
 </body>
