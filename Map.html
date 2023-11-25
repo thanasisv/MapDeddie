@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Χάρτης με Αναζήτηση, Τοποθεσία και KML</title>
+  <title>Χάρτης με Αναζήτηση και Αποτελέσματα από KML</title>
   <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places&callback=initMap"></script>
   <style>
     #map {
@@ -29,10 +29,10 @@
       });
 
       kmlLayer = new google.maps.KmlLayer({
-        url: 'https://drive.google.com/file/d/1FlkQiVsFSP6bCRWxqJ578eDymuSRKR7p/view?usp=drive_link',
+        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
         map: map,
         preserveViewport: true,
-        suppressInfoWindows: true  // Εξαίρεση παραθύρων πληροφοριών του KML
+        suppressInfoWindows: true
       });
 
       google.maps.event.addListener(kmlLayer, 'status_changed', function () {
