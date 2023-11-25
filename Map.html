@@ -31,8 +31,7 @@
       kmlLayer = new google.maps.KmlLayer({
         url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
         map: map,
-        preserveViewport: true,
-        suppressInfoWindows: true  // Εξαίρεση παραθύρων πληροφοριών του KML
+        suppressInfoWindows: true
       });
 
       google.maps.event.addListener(kmlLayer, 'status_changed', function () {
