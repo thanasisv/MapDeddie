@@ -39,7 +39,7 @@ google.maps.event.addListener(kmlLayer, 'status_changed', function () {
   if (kmlLayer.getStatus() !== 'OK') {
     alert('Υπήρξε ένα πρόβλημα κατά τη φόρτωση του KML.');
   }
-});
+}
     function requestLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
