@@ -3,7 +3,6 @@
 <head>
   <title>Χάρτης με Αναζήτηση και Αποτελέσματα από KML</title>
   <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places&callback=initMap"></script>
-
   <style>
     #map {
       height: 500px;
@@ -33,30 +32,25 @@
         map: map,
         preserveViewport: true
       });
+
+      // Προσθέτουμε αυτήν τη γραμμή για να εκτελείται η initMap με την φόρτωση του API
+      initMap();
     }
 
     function requestLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(initMap, handleLocationError);
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          map.setCenter(pos);
+          map.setZoom(15); // Επιλογή επιθυμητού επιπέδου ζουμ
+        }, function(error) {
+          handleLocationError(error);
+        });
       } else {
         alert("Η υπηρεσία τοποθεσίας δεν υποστηρίζεται από τον πρόγραμμα περιήγησής σας.");
-      }
-    }
-
-    function handleLocationError(error) {
-      switch(error.code) {
-        case error.PERMISSION_DENIED:
-          alert("Ο χρήστης απέρριψε το αίτημα για τοποθεσία.");
-          break;
-        case error.POSITION_UNAVAILABLE:
-          alert("Η πληροφορία τοποθεσίας δεν είναι διαθέσιμη.");
-          break;
-        case error.TIMEOUT:
-          alert("Το αίτημα για τοποθεσία υπέρβηκε τον χρόνο.");
-          break;
-        case error.UNKNOWN_ERROR:
-          alert("Προέκυψε άγνωστο σφάλμα κατά την λήψη της τοποθεσίας.");
-          break;
       }
     }
 
@@ -103,10 +97,6 @@
     function clearResults() {
       // Καθαρισμός αποτελεσμάτων
     }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      initMap();
-    });
   </script>
 
 </body>
