@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Χάρτης με Αναζήτηση και Αποτελέσματα από KML</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places&callback=initMap"></script>
   <style>
     #map {
       height: 500px;
@@ -77,7 +77,8 @@
       // Καθαρισμός αποτελεσμάτων
     }
 
-    google.maps.event.addDomListener(window, 'load', initMap);
+    window.addEventListener('load', initMap);
+
   </script>
 
 </body>
