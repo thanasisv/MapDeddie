@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Χάρτης με Αναζήτηση και Αποτελέσματα από KML</title>
-  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places&callback=initMap"></script>
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places"></script>
   <style>
     #map {
       height: 500px;
@@ -88,8 +88,11 @@
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        // Εμφάνιση πληροφοριών για το
-      }
+        // Εμφάνιση πληροφοριών για το μέρος
+        var infowindow = new google.maps.InfoWindow();
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+      });
     }
 
     function clearMarkers() {
@@ -99,6 +102,10 @@
     function clearResults() {
       // Καθαρισμός αποτελεσμάτων
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      initMap();
+    });
   </script>
 
 </body>
