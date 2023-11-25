@@ -12,6 +12,7 @@
 </head>
 <body>
 
+  <button onclick="requestLocation()">Ζητήστε τη θέση μου</button>
   <input id="searchInput" type="text" placeholder="Αναζήτηση">
   <button onclick="search()">Αναζήτηση</button>
   <div id="map"></div>
@@ -31,6 +32,31 @@
         map: map,
         preserveViewport: true
       });
+    }
+
+    function requestLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(initMap, handleLocationError);
+      } else {
+        alert("Η υπηρεσία τοποθεσίας δεν υποστηρίζεται από τον πρόγραμμα περιήγησής σας.");
+      }
+    }
+
+    function handleLocationError(error) {
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          alert("Ο χρήστης απέρριψε το αίτημα για τοποθεσία.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Η πληροφορία τοποθεσίας δεν είναι διαθέσιμη.");
+          break;
+        case error.TIMEOUT:
+          alert("Το αίτημα για τοποθεσία υπέρβηκε τον χρόνο.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("Προέκυψε άγνωστο σφάλμα κατά την λήψη της τοποθεσίας.");
+          break;
+      }
     }
 
     function search() {
@@ -62,11 +88,8 @@
       });
 
       google.maps.event.addListener(marker, 'click', function() {
-        // Εμφάνιση πληροφοριών για το μέρος
-        var infowindow = new google.maps.InfoWindow();
-        infowindow.setContent(place.name);
-        infowindow.open(map, this);
-      });
+        // Εμφάνιση πληροφοριών για το
+      }
     }
 
     function clearMarkers() {
@@ -76,8 +99,6 @@
     function clearResults() {
       // Καθαρισμός αποτελεσμάτων
     }
-
-    window.addEventListener('load', initMap);
   </script>
 
 </body>
