@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Χάρτης με Αναζήτηση και Αποτελέσματα από KML</title>
+  <title>Χάρτης με Αναζήτηση και Τοποθεσία</title>
   <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places&callback=initMap"></script>
   <style>
     #map {
@@ -19,25 +19,12 @@
 
   <script>
     var map;
-    var kmlLayer;
 
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 37.7749, lng: -122.4194 },
         zoom: 8,
         mapTypeId: 'roadmap'
-      });
-
-      kmlLayer = new google.maps.KmlLayer({
-        url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
-        map: map,
-        suppressInfoWindows: true
-      });
-
-      kmlLayer.addListener('status_changed', function () {
-        if (kmlLayer.getStatus() !== 'OK') {
-          alert('Υπήρξε ένα πρόβλημα κατά τη φόρτωση του KML.');
-        }
       });
     }
 
