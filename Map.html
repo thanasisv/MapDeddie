@@ -9,5 +9,16 @@
 
 <iframe src="https://www.google.com/maps/d/embed?mid=1_83AvSFX_RW_EZLRoSyLJmX9PvO-r8I&ehbc=2E312F" width="640" height="480"></iframe>
 
+<input type="text" id="searchInput" name="search" placeholder="Αναζήτηση...">
+<button onclick="performSearch()">Αναζήτηση</button>
+
+<script>
+    function performSearch() {
+        var searchTerm = document.getElementById('searchInput').value;
+        // Εδώ μπορείτε να προσθέσετε λειτουργίες αναζήτησης με βάση την τιμή του searchTerm
+        alert('Αναζήτηση για: ' + searchTerm);
+    }
+</script>
+
 </body>
 </html>
