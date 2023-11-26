@@ -21,12 +21,18 @@
     var map;
     var kmlLayer;
 
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 37.7749, lng: -122.4194 },
-        zoom: 8,
-        mapTypeId: 'roadmap'
-      });
+function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 11,
+    center: { lat: 41.876, lng: -87.624 },
+  });
+  const ctaLayer = new google.maps.KmlLayer({
+    url: "https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml",
+    map: map,
+  });
+}
+
+window.initMap = initMap;
 
       kmlLayer = new google.maps.KmlLayer({
         url: 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml',
