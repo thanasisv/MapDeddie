@@ -1,35 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
- <head>
-    <title>Places Search Box</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<html>
+  <head>
+    <title>Places Search Box</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script type="module" src="./index.js"></script>
-  </head>
-  <body>
-    <input
-      id="pac-input"
-      class="controls"
-      type="text"
-      placeholder="Search Box"
-    />
-    <div id="map"></div>
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./index.js"></script>
+  </head>
+  <body>
+    <input
+      id="pac-input"
+      class="controls"
+      type="text"
+      placeholder="Search Box"
+    />
+    <div id="map"></div>
 
-<iframe src="https://www.google.com/maps/d/embed?mid=1_83AvSFX_RW_EZLRoSyLJmX9PvO-r8I&ehbc=2E312F" width="640" height="480"></iframe>
-
-<input type="text" id="searchInput" name="search" placeholder="Αναζήτηση...">
-<button onclick="performSearch()">Αναζήτηση</button>
-
-<script>
-    function performSearch() {
-        var searchTerm = document.getElementById('searchInput').value;
-        // Εδώ μπορείτε να προσθέσετε λειτουργίες αναζήτησης με βάση την τιμή του searchTerm
-        alert('Αναζήτηση για: ' + searchTerm);
-    }
-</script>
-
-</body>
+    <!-- 
+      The `defer` attribute causes the callback to execute after the full HTML
+      document has been parsed. For non-blocking uses, avoiding race conditions,
+      and consistent behavior across browsers, consider loading using Promises.
+      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+      for more information.
+      -->
+    <script
+      src="https://www.google.com/maps/d/embed?mid=1_83AvSFX_RW_EZLRoSyLJmX9PvO-r8I&ehbc=2E312F"
+      defer
+    ></script>
+  </body>
 </html>
