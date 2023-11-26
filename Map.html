@@ -26,18 +26,22 @@
     }
 
     function initmap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: new google.maps.LatLng(-19.257753, 146.823688),
-        zoom: 2,
-        mapTypeId: 'terrain'
-      });
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: new google.maps.LatLng(-19.257753, 146.823688),
+    zoom: 2,
+    mapTypeId: 'terrain'
+  });
 
-      var src = 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml';
-      var kmllayer = new google.maps.KmlLayer(src, {
-        suppressInfoWindows: true,
-        preserveViewport: false,
-        map: map
-      });
+  var src = 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml';
+  var kmllayer = new google.maps.KmlLayer(src);
+  kmllayer.setMap(map);  // Set the map for the KML layer
+
+  kmllayer.addListener('click', function(event) {
+    var content = event.featureData.infoWindowHtml;
+    var testimonial = document.getElementById('capture');
+    testimonial.innerHTML = content;
+  });
+}
 
       kmllayer.addListener('click', function(event) {
         var content = event.featureData.infoWindowHtml;
