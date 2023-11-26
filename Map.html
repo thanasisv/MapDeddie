@@ -1,89 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Αναζήτηση σε Χάρτη με KML Layers</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&libraries=places"></script>
-  <style>
-    #map {
-      height: 400px;
-      width: 100%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Η Σελίδα μου</title>
 </head>
 <body>
 
-<h1>Αναζήτηση σε Χάρτη</h1>
-<input id="pac-input" type="text" placeholder="Αναζήτηση...">
-<div id="map"></div>
-
-<script>
-function initMap() {
-  const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 11,
-    center: { lat: 41.876, lng: -87.624 },
-  });
-
-  const ctaLayer = new google.maps.KmlLayer({
-    url: "https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml",
-    map: map,
-  });
-
-  // Δημιουργία πεδίου αναζήτησης
-  const input = document.getElementById("pac-input");
-  const searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-  map.addListener("bounds_changed", function () {
-    searchBox.setBounds(map.getBounds());
-  });
-
-  let markers = [];
-
-  searchBox.addListener("places_changed", function () {
-    const places = searchBox.getPlaces();
-
-    if (places.length === 0) {
-      return;
-    }
-
-    // Καθαρισμός προηγούμενων markers
-    markers.forEach(function (marker) {
-      marker.setMap(null);
-    });
-    markers = [];
-
-    // Εμφάνιση αποτελεσμάτων αναζήτησης στο χάρτη
-    const bounds = new google.maps.LatLngBounds();
-    places.forEach(function (place) {
-      if (!place.geometry) {
-        console.log("Το μέρος δεν έχει γεωμετρία");
-        return;
-      }
-
-      markers.push(
-        new google.maps.Marker({
-          map: map,
-          title: place.name,
-          position: place.geometry.location,
-        })
-      );
-
-      if (place.geometry.viewport) {
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
-    });
-    map.fitBounds(bounds);
-  });
-}
-
-window.initMap = initMap;
-</script>
-
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key= AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap&libraries=places">
-</script>
+<iframe src="https://www.google.com/maps/d/embed?mid=1_83AvSFX_RW_EZLRoSyLJmX9PvO-r8I&ehbc=2E312F" width="640" height="480"></iframe>
 
 </body>
 </html>
