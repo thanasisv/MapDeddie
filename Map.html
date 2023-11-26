@@ -1,30 +1,69 @@
-<html>
-  <head>
-    <title>Places Search Box</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+function initautocomplete() {
+  var input = document.getelementbyid('pac-input');
+  var searchbox = new google.maps.places.searchbox(input);
+  map.controls[google.maps.controlposition.top_left].push(input);
 
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script type="module" src="./index.js"></script>
-  </head>
-  <body>
-    <input
-      id="pac-input"
-      class="controls"
-      type="text"
-      placeholder="Search Box"
-    />
-    <div id="map"></div>
+  // bias the searchbox results towards current map's viewport.
+  map.addlistener('bounds_changed', function() {
+    searchbox.setbounds(map.getbounds());
+  });
+}
 
-    <!-- 
-      The `defer` attribute causes the callback to execute after the full HTML
-      document has been parsed. For non-blocking uses, avoiding race conditions,
-      and consistent behavior across browsers, consider loading using Promises.
-      See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
-      for more information.
-      -->
-    <script
-      src="https://www.google.com/maps/d/embed?mid=1_83AvSFX_RW_EZLRoSyLJmX9PvO-r8I&ehbc=2E312F"
-      defer
-    ></script>
-  </body>
-</html>
+
+var map;
+var src = 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml';
+
+function initmap() {
+  map = new google.maps.map(document.getelementbyid('map'), {
+    center: new google.maps.latlng(-19.257753, 146.823688),
+    zoom: 2,
+    maptypeid: 'terrain'
+  });
+
+  var kmllayer = new google.maps.kmllayer(src, {
+    suppressinfowindows: true,
+    preserveviewport: false,
+    map: map
+  });
+  kmllayer.addlistener('click', function(event) {
+    var content = event.featuredata.infowindowhtml;
+    var testimonial = document.getelementbyid('capture');
+    testimonial.innerhtml = content;
+  });
+
+}
+
+function initmapfunctions() {
+  initmap();
+  initautocomplete();
+}
+html,
+body {
+  height: 370px;
+  padding: 0;
+  margin: 0;
+}
+
+#map {
+  height: 360px;
+  width: 300px;
+  overflow: hidden;
+  float: left;
+  border: thin solid #333;
+}
+
+#capture {
+  height: 360px;
+  width: 480px;
+  overflow: hidden;
+  float: left;
+  background-color: #ececfb;
+  border: thin solid #333;
+  border-left: none;
+}
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initmapfunctions&libraries=places">
+</script>
+
+<input id="pac-input" class="controls" type="text" placeholder="search box">
+<div id="map"></div>
+<div id="capture"></div>
