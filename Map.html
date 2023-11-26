@@ -1,69 +1,55 @@
-function initautocomplete() {
-  var input = document.getelementbyid('pac-input');
-  var searchbox = new google.maps.places.searchbox(input);
-  map.controls[google.maps.controlposition.top_left].push(input);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Maps Example</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initmapfunctions&libraries=places" async defer></script>
+</head>
+<body>
+  <input id="pac-input" class="controls" type="text" placeholder="Search box">
+  <div id="map"></div>
+  <div id="capture"></div>
 
-  // bias the searchbox results towards current map's viewport.
-  map.addlistener('bounds_changed', function() {
-    searchbox.setbounds(map.getbounds());
-  });
-}
+  <script>
+    var map;
 
+    function initautocomplete() {
+      var input = document.getElementById('pac-input');
+      var searchbox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-var map;
-var src = 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml';
+      // Bias the searchbox results towards the current map's viewport.
+      map.addListener('bounds_changed', function() {
+        searchbox.setBounds(map.getBounds());
+      });
+    }
 
-function initmap() {
-  map = new google.maps.map(document.getelementbyid('map'), {
-    center: new google.maps.latlng(-19.257753, 146.823688),
-    zoom: 2,
-    maptypeid: 'terrain'
-  });
+    function initmap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: new google.maps.LatLng(-19.257753, 146.823688),
+        zoom: 2,
+        mapTypeId: 'terrain'
+      });
 
-  var kmllayer = new google.maps.kmllayer(src, {
-    suppressinfowindows: true,
-    preserveviewport: false,
-    map: map
-  });
-  kmllayer.addlistener('click', function(event) {
-    var content = event.featuredata.infowindowhtml;
-    var testimonial = document.getelementbyid('capture');
-    testimonial.innerhtml = content;
-  });
+      var src = 'https://thanasisv.github.io/kml/KML%20FOR%20NAVIGATOR.kml';
+      var kmllayer = new google.maps.KmlLayer(src, {
+        suppressInfoWindows: true,
+        preserveViewport: false,
+        map: map
+      });
 
-}
+      kmllayer.addListener('click', function(event) {
+        var content = event.featureData.infoWindowHtml;
+        var testimonial = document.getElementById('capture');
+        testimonial.innerHTML = content;
+      });
+    }
 
-function initmapfunctions() {
-  initmap();
-  initautocomplete();
-}
-html,
-body {
-  height: 370px;
-  padding: 0;
-  margin: 0;
-}
-
-#map {
-  height: 360px;
-  width: 300px;
-  overflow: hidden;
-  float: left;
-  border: thin solid #333;
-}
-
-#capture {
-  height: 360px;
-  width: 480px;
-  overflow: hidden;
-  float: left;
-  background-color: #ececfb;
-  border: thin solid #333;
-  border-left: none;
-}
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIpW0xPz54Mq3F8cpmSox7QbTD6vGRj90&callback=initMap&libraries=places"></script>
-</script>
-
-<input id="pac-input" class="controls" type="text" placeholder="search box">
-<div id="map"></div>
-<div id="capture"></div>
+    function initmapfunctions() {
+      initmap();
+      initautocomplete();
+    }
+  </script>
+</body>
+</html>
