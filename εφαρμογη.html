@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ΔΕΔΔΗΕ - Εφαρμογή</title>
+
+    <!-- PWA / iPhone install support -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-180.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ΔΕΔΔΗΕ">
+    <meta name="theme-color" content="#5005f3">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #5005f3;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #161515;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            background: #5005f3;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            width: 100%;
+        }
+
+        .header img {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 25px;
+        }
+
+        /* Κρύβουμε τα radio buttons (λειτουργούν στο παρασκήνιο) */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Πλέγμα για τα κουμπιά του μενού */
+        .buttons-grid {
+            display: none; /* Κρυφό από προεπιλογή, εμφανίζεται μόνο στην αρχική */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        /* Στυλ για τα κουμπιά-ετικέτες (Labels) */
+        .btn {
+            background-color: #0f0f10;
+            color: rgb(246, 246, 248);
+            padding: 20px 10px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Το 6ο κουμπί (PDF Link) */
+        .btn-pdf {
+            background-color: #0a0a0a;
+            text-decoration: none;
+        }
+
+        .btn-pdf:hover {
+            background-color: #0d41ef;
+        }
+
+        /* Κουμπί Πίσω */
+        .btn-back {
+            background-color: #0e0e0f;
+            color: white;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 6px;
+            display: block;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn-back:hover {
+            background-color: #1d16dc;
+        }
+
+        /* Περιοχές Περιεχομένου */
+        .content-section {
+            display: none; /* Όλες οι υποκατηγορίες κρυφές εξ ορισμού */
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+            border-top: 4px solid #007bff;
+        }
+
+        /* ---- ΛΟΓΙΚΗ ΕΝΑΛΛΑΓΗΣ ΜΕ ΚΑΘΑΡΟ CSS (ΧΩΡΙΣ JAVASCRIPT) ---- */
+        
+        /* Όταν είναι επιλεγμένη η Αρχική (#tab-home) -> Δείξε μόνο το μενού */
+        #tab-home:checked ~ .buttons-grid {
+            display: grid;
+        }
+
+        /* Όταν επιλεγεί κάποιο κουμπί -> Δείξε ΜΟΝΟ την αντίστοιχη υποκατηγορία */
+        #tab-info1:checked ~ #info1,
+        #tab-info2:checked ~ #info2,
+        #tab-info3:checked ~ #info3,
+        #tab-info4:checked ~ #info4,
+        #tab-info5:checked ~ #info5 {
+            display: block;
+        }
+
+        /* Στυλ Καταλόγου */
+        .contact-box {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+        .contact-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .contact-row:last-child {
+            border-bottom: none;
+        }
+        .phone-link {
+            color: #090909;
+            text-decoration: none;
+            font-weight: bold;
+            background: #d5d5d5;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Radio Buttons για τον έλεγχο των σελίδων -->
+        <input type="radio" name="app-tabs" id="tab-home" checked>
+        <input type="radio" name="app-tabs" id="tab-info1">
+        <input type="radio" name="app-tabs" id="tab-info2">
+        <input type="radio" name="app-tabs" id="tab-info3">
+        <input type="radio" name="app-tabs" id="tab-info4">
+        <input type="radio" name="app-tabs" id="tab-info5">
+
+        <!-- Header & Logo -->
+        <div class="header">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFkAAAAuCAYAAABDLLXWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAvbSURBVHhe7VsNkFVVHT+YiRqw++657y0QukqbMAu7755z38KGOTslGPZhXzg5jqlJVn5Sjg4wNWJqljFj0gwNDWqpk2F+hykSWpI5xhSg5lQI+AFqSUgoH5IC/X7/c+979771H7s7rMGy78z89tx7Pv//3/mfc/7n3LdqQIahHVrlbJvK2E8ovzBD+eY7qiHfGOXWQ69DtnWI0qYAfFlpezXiOxA/ifg15du9KjdxL+KHlWoZHNWoh5rBmzBMNbSNVp7tVFl7Dki8UXnBMsTrYKmbQeRule3Y61AAQpCL2LfvqKyZGrVSD8XQjKlN6/SCaSoTzMLzQhD5KN6ddZJAITIGCSWQlwTzPPN7pboOj1oegGFEeLT6wMQmpTsKsM5zQeiPMNUfAmGrQew/QWyKdaaQWRMoq/NnRb0NgDB0rFZNhfFQ/JMg62KQOA8kPobp/y8Qu8uRQiJjQoFeEVoBtqPtKgykH0lwKIXT36e8lmFuusM6/eAHeL4LhD4F5Te4qT4hQWZsnftBaBXYB9u2syOh+nEY1ukp3TYGU/JjUO5r2GDmActB7EaQ+h+k7XHKJqZ8n5JZA+xHmw1qZOGYSNJ+EmQzCjpUxnxJNcLv1ObnmI5PIMZmFFtOEn1tnb0A+88EN0SSH3RhkMqEDcprG6WawgmwxvNA7I9B5G9B2HMg9fX0zShF0QMGked1lTlYrDg3vkl5IDMbTgOBV0C4W0Dqk3CV3sDz7lQLPVDW2VPIoJu/Q4ezYRynQb8pSPsonguqqX28aiiMRrkRalirp1TnURETfRGaj5RGOd39YDoInYdOfwOsEuuUzajSOg9yMrtDaYa9LfuDhhfjm5cR/wN4GukroD/2D7MUz79G2t0YmNuBBUiHK2muwtJ4GdIvxEBhwAqnIe1ktHuiO7KHx6qROL6r1iOUkOqxQXGV3nICkMiDdbr3JSJjESMiotlY1D+JpMcDxHVdW3swGP8FyTuB7XjeijTO9k3iPeHEc7/KsYG4UrFiHd0iyVkFyGcOg+LbexSs9yE3MmmN1LFfIK9cdmHJy3tGcjxKaXmViMvWQlqdJHparhJ90X5P8tKQUl5Ito/Dks3K7kkuNoK1p0aDfQZpH/0Un3uIZNn3WsYewlnySlgydtN9kiwCv4IjqNtFs+ZGvEckVEA2Bi4/5iuoN93F8KVj8JJH2wuA52sSwTsL6Se8BM/ro+vIboC2PPMH1w/69ex96fVYDrp45mJ4CbPhTcENTeTJKRQHKfbtG2xcCRl5dSrtF0r6xMjSu7DXoAwch0Qd8urBXcSf9fskmcRp893I13OX4L79s6RXluUGmrNzopK1A6dQZZ/yHvxV2o+DKJzSTxmgVJbHc3tKVEupBhsifYvbzBNl2QfdMwbe7nnwCGJSnDwYgPwHlZpzGJ5fLNVH3Nh2ktSrFTId48DTprI+2aYXrIPCwctVwhTBdFTMtY1WzfCls/lAGvTDb6Vaingp9lpXBsdrWlcmv7SE4BHEj6JPujjldR2Z35S6utChsl1DMBNa0M7GqgFJQuqZ36mWqYNVDgcJgifTrLmzaoCEZPOsXKE2TDi+imRtXsVAf1jpSUPR5ktlJGv7cZHNC34ILC/Ty8svgc/8J9R/t7w/1gO/+PNqTZLpG3rhfNe4+QLKPi2WNjzIQojqGZAkOWuvVk0fcW0UAaXTCBMF7QtywtRjoCBmCgeJwTc/Sa1TRLgbSp/tyubnQtE75TkXTEGbu8qMwREZkYzB0NA7lomyi2/bfsI+SaZsqXqlcOjSXuGa7E506QW2In+iNK7De6VBfitj8PPXVSkvJJvvSb4Min0QuMcByvsY7WT5GM4a50q9bHC6+JfawvWR9zwGd0fR4irrxaTxXliDGG13qKGwRqUw5WHhSRljkvmpSsrbRXi/F/HdyL8fzwtloBvaMtUk4zTHwJOeDhc7nUSvu6DrunT5kEZ+8bI5nWQo4OE4yeBbi8Z2utE2j6kwfD8s9UN4Lt8ckiSnhUz7VNTBlEr2h2cNGXRhjJThZZMMJk6f2WBSlFY99QmSljUzXRl7kXsHOKUZfHNGqiU3teckv1Yg0ZUke5gZtYJvr5e2436K/Un9zVSgfLEWyPserDPuA6O2C10jTA/fVrnQdejbBdGpxiFJcqNphwVegFE+zwFT2jPz0Va5Z+LIu1Xq8N5ZR+sk07PmJkn3CpNRprR+Sj08cw3NdgxXra1H4PkvRZJ9WpYdoUZ1HoU+kR7JGJNMS6X1e8E52Ce+KvJl8udD3zNkL+BXmmqSJ4ssmeBUtPGNkl75c5G3rEy2GE7GTZzWr1WRTKF4OdLVdbjyO05AhxiIaKTcksF1bxAsvVMsLu5ASC5ufN+WspJXiURffrhLZQq0WLQXwGLjfqTcJkzNscjjbr+sSJbkC5nOYjPtsNgw8uEBV26G5PnBpaU2I5JlTZ54HHTv/cZHXnqkF9tEGvlFo+6TT1kBdMhRZvDN912jSGM5J/C76Kwg+dosLiqRJFnby9HxHuTviLATlr0dnW5DWWfNJMOzD8gnKR9uFy9XmCbyAGxPm+ukvSz2Am5yUg95XGIa29pUS8tglFkqZWNlhWTznKy9XBq0dZt0GcnY+Dxe11L2qI5ckvFLzr5IDh4WOUp67YBOb4Ev7Bssm4DUN/AuvOCFIkmSwWezouiv0m8cPqEV5UrgVR6nouRjrfK5i6NBt1xcJekKigyDC9aQP64MrO+Hzs/WdqdqzH9KilPxHJaYZD/st3i5Dt/Vo1wRWZ75qUtHoKtXKWNTflyUCxntlc5ApE/6yYPU0VhO0vzkTOux8hOBKj/ZOj95CDyrNL0ag8+C8HLfXOQM1tMS10QdRBkopIObxY/kZtRomlFmZBXEh4W747fBAoO1Uk+8AihPIeivcoD4FaUIvEsduyIquxYoyJLEjTStH+kfcriNdn5kpe+gjRmuDiyPA1FZr9gXpr+X/7zUEZKhr99ulO44GXKXNmFyIHfn2IfcRp9YRhF7wXRpi/JU6sX137efBt6oIpn94c8zZSQT2vwbHa5BvL4b8Nc5jLeX6ssF+POSl1oe/rBclLMfWLIjOq1sEsxHOV6sixJcNjZG/aSVT2ItyHkRckVrNqxXw0o5jX0TyVwESDcbEEPGioMFf+dRsz9eE2AWOLlKdcSSzWqunX+sIpnCMK2n6G3dZPm0/FpwBEf19kPGtLTu8rrtLyFbsQ7SffMELfkR91JRoI79B3nVZgm9B5zk6iS/J3D7zmKQbG+Tn4+KyfcWnEKcJvtCSueHFCI905YTHW7DRorDGXfMbMdUnLY+h932TOzYF6LSZUi/Euv1DRiJhXCBbkODD2CHfVzcKA0flBdL3CB9uwWz4U08b0d5fvnlzh+d6io67vekJ8mElYqng3eeAdzPc/8GUn8FDmcj7TNAQU6XPQ84MMjnbTj/9JF5W8YjLd0oXoH68CP5y3XPfBHvvJy/CB3ORHyNyvLXmMEt6BQnqv5CNOWMCY1IFUJpVPZZ6LIE8QIY4KUwvsni1tHX5+n0gAWeonQAV4cWnabUgUIlmZSPachzn/c5axfhfQ5OmGeqTP5EnCRHRVodZIEjnubm/N8REwrLjI/ivH/hfbYf8N8cbgVmyqGEBzL5aW1/+JG4WLFd5awkTfG+BgczJrMC2rwNWVaLV8U7bJ3/Oqb7FNXUfnwkbT8N2pwF5aMTVxop+4uEdZY2I17e4JRmVmK6/xKzaBYs9VTVwCM1jt28Ez9kQnPXkVBqiVM+jaDeoNJCSSpi374Jq3wGFvogNqD52HwvkU04M+6YgfH/ILwi1CFcu15acZmrRCJZn+4h3EXfYHe3d8BCZ8FzmYb8SXJRM2CDZ2/v3ooThMp1qQzIFhC5BiQuR3wzcDncxVPk1/H8jbS4lPWgVKNtg9VtLVpi1amIZALabANWg8hFwLVYO3mt2KWGm+aopXqoEQ4DcTeppk6QGVsyf1JqXgKBTyHvZyD0CvfpfvxY+XipVN06exXcZ/Vf4PBxHzaiuSD5fOCkbr8U10NvAlwk/qP4gA9K/Q+3T7T4cChD5wAAAABJRU5ErkJggg==" alt="ΔΕΔΔΗΕ Logo">
+            <h3>ΔΠΑΣΕ/ΤΚΣΔΜ</h3>
+            <h1>ΣΥΝΕΡΓΕΙΟ ΜΕΤΡΗΣΕΩΝ</h1>
+        </div>
+
+        <!-- Αρχικό Μενού (Εμφανίζεται μόνο όταν το #tab-home είναι checked) -->
+        <div class="buttons-grid">
+            <label for="tab-info1" class="btn">Πληροφορία 1</label>
+            <label for="tab-info2" class="btn">Πληροφορία 2</label>
+            <label for="tab-info3" class="btn">Πληροφορία 3</label>
+            <label for="tab-info4" class="btn">Πληροφορία 4</label>
+            <label for="tab-info5" class="btn">Τηλέφωνα</label>
+            
+            <!-- Το 6ο κουμπί ανοίγει απευθείας το PDF -->
+            <a href="https://1drv.ms" target="_blank" class="btn btn-pdf">Δείτε το Πρόγραμμα (PDF)</a>
+        </div>
+
+        <!-- Υποκατηγορία 1 -->
+        <div id="info1" class="content-section">
+            <h2>Τίτλος Πληροφορίας 10</h2>
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+            <p>Εδώ μπορείς να γράψεις τα δεδομένα που θέλεις για την κατηγορία 1.</p>
+        </div>
+
+        <!-- Υποκατηγορία 2 -->
+        <div id="info2" class="content-section">
+            <h2>Τίτλος Πληροφορίας 2</h2>
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+            <p>Εδώ μπαίνουν τα δεδομένα για την κατηγορία 2.</p>
+        </div>
+
+        <!-- Υποκατηγορία 3 -->
+        <div id="info3" class="content-section">
+            <h2>Τίτλος Πληροφορίας 3</h2>
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+            <p>Εδώ μπαίνουν τα δεδομένα για την κατηγορία 3.</p>
+        </div>
+
+        <!-- Υποκατηγορία 4 (Χάρτης) -->
+        <div id="info4" class="content-section" style="padding: 10px;">
+            <h2>Χάρτης ΔΕΔΔΗΕ</h2>
+            
+            <label for="tab-home" class="btn-back" style="margin-bottom: 15px;">⬅ Πίσω στο Αρχικό Μενού</label>
+            
+            <!-- Ενσωμάτωση χάρτη με <object> για 100% συμβατότητα στο iPhone -->
+            <div style="width: 100%; height: 60vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
+                <object data="https://thanasisv.github.io/MapDeddie/Map.html" style="width: 100%; height: 100%;">
+                    <!-- Αν για κάποιο λόγο κολλήσει η συσκευή, βγάζει εναλλακτικό κουμπί -->
+                    <a href="https://thanasisv.github.io/MapDeddie/Map.html" target="_blank" class="btn">Άνοιγμα Χάρτη</a>
+                </object>
+            </div>
+        </div>
+
+        <!-- Υποκατηγορία 5 (Τηλέφωνα) -->
+        <div id="info5" class="content-section">
+            <h2>Τηλεφωνικός Κατάλογος</h2>
+            
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+
+            <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+            
+            <div class="contact-box">
+                <!-- Επαφή 1 -->
+                <div class="contact-row">
+                    <span style="font-weight: 600;">ΒΛΑΧΟΣ ΑΘΑΝΑΣΙΟΣ</span>
+                    <a href="tel:6980000000" class="phone-link">6984733361</a>
+                </div>
+                <div class="contact-row">
+                    <span style="font-weight: 600;">ΙΩΑΝΝΟΥ ΑΝΔΡΕΑΣ</span>
+                    <a href="tel:2100000000" class="phone-link">210*******</a>
+                </div>
+                <div class="contact-row">
+                    <span style="font-weight: 600;">ΤΣΙΑΤΑΣ ΓΙΩΡΓΟΣ</span>
+                    <a href="tel:2100000000" class="phone-link">210*******</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
