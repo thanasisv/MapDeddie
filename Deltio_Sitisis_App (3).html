@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<title>Δελτίο Σίτισης</title>
+<style>
+  *{box-sizing:border-box;}
+  body{
+    font-family:"Segoe UI", Arial, sans-serif;
+    background:#e9e6da;
+    color:#000;
+    margin:0;
+    padding:24px;
+  }
+  .sheet{
+    max-width:700px;
+    margin:0 auto;
+    background:#fff;
+    border:1px solid #ccc;
+    padding:26px 40px 40px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  }
+  .headrow{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-top:20px;
+  }
+  .unit{
+    font-weight:800;
+    font-size:14px;
+    margin-top:40px;
+  }
+  .unit div:last-child{
+    font-weight:800;
+    font-size:14px;
+    margin-top:2px;
+  }
+  .logo img{
+    height:130px;
+  }
+  .datebar{
+    margin-top:18px;
+    font-size:14px;
+  }
+  .datebar span{
+    font-weight:700;
+  }
+  h1{
+    text-align:center;
+    font-size:20px;
+    letter-spacing:.02em;
+    margin:18px 0 20px;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+  }
+  th, td{
+    border:1px solid #000;
+    padding:5px 7px;
+    text-align:left;
+  }
+  th{
+    background:#f2f2f2;
+    font-size:13px;
+  }
+  td.aa{
+    width:34px;
+    text-align:center;
+  }
+  td.am{
+    width:80px;
+    text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+  select, input[type=text]{
+    width:100%;
+    border:none;
+    background:transparent;
+    font-size:14px;
+    font-family:inherit;
+    color:#000;
+    padding:2px 0;
+  }
+  select:focus, input[type=text]:focus{
+    outline:1px solid #7a9;
+    background:#fbfff8;
+  }
+  td.del{
+    width:26px;
+    text-align:center;
+  }
+  td.del button{
+    border:none;
+    background:none;
+    color:#b03030;
+    cursor:pointer;
+    font-size:15px;
+    line-height:1;
+  }
+  .toolbar{
+    max-width:800px;
+    margin:14px auto 0;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+  }
+  .toolbar button{
+    border:1px solid #4a6b41;
+    background:#5c7a52;
+    color:#fff;
+    padding:9px 20px;
+    border-radius:6px;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .toolbar button.secondary{
+    background:#fff;
+    color:#4a6b41;
+  }
+  .sign{
+    margin-top:120px;
+    text-align:right;
+    padding-right:40px;
+    font-size:14px;
+    font-weight:700;
+  }
+  @media print{
+    body{ background:#fff; padding:0; }
+    .sheet{ box-shadow:none; border:none; max-width:100%; padding:10px 24px; }
+    .toolbar{ display:none; }
+    .del{ display:none; }
+    select, input[type=text]{ outline:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <div class="headrow">
+    <div class="unit">
+      <div>ΔΠΑΣΕ/ΤΚΣΔΜ</div>
+      <div>ΣΥΝΕΡΓΕΙΟ ΜΕΤΡΗΣΕΩΝ-ΟΔΗΓΩΝ</div>
+    </div>
+    <div class="logo"><img src="data:image/png;base64,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" alt="ΔΕΔΔΗΕ"></div>
+  </div>
+
+  <div class="datebar">ΗΜΕΡΟΜΗΝΙΑ&nbsp; : &nbsp;<span id="date"></span></div>
+
+  <h1>ΔΕΛΤΙΟ ΣΙΤΙΣΗΣ</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="aa">Α/Α</th>
+        <th>ΟΝΟΜΑΤΕΠΩΝΥΜΟ</th>
+        <th class="am">Α.Μ</th>
+        <th>ΠΑΡΑΤΗΡΗΣΕΙΣ</th>
+        <th class="del"></th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="sign">ΥΠΟΓΡΑΦΗ</div>
+</div>
+
+<div class="toolbar">
+  <button class="secondary" onclick="addRow()">+ Προσθήκη γραμμής</button>
+  <button onclick="doPrint()">Εκτύπωση</button>
+</div>
+
+<script>
+const roster = [
+  ["ΒΛΑΧΟΣ ΑΘΑΝΑΣΙΟΣ", 504700],
+  ["ΤΣΙΑΤΑΣ ΓΕΩΡΓΙΟΣ", 51246],
+  ["ΙΩΑΝΝΟΥ ΑΝΔΡΕΑΣ", 54161],
+  ["ΑΡΤΣΑΝΟΣ ΑΝΤΩΝΙΟΣ", 56427],
+  ["ΜΕΤΑΞΑΣ ΓΕΩΡΓΙΟΣ", 56731],
+  ["ΡΟΥΚΑΣ ΚΩΝ/ΝΟΣ", 78125],
+  ["ΚΑΡΑΝΤΩΝΗΣ ΓΕΩΡΓΙΟΣ", 507652],
+  ["ΚΙΑΜΟΣ ΠΕΤΡΟΣ", 69479],
+  ["ΑΓΓΕΛΟΠΟΥΛΟΣ ΒΑΣΙΛΕΙΟΣ", 71940],
+  ["ΤΣΑΧΑΚΗΣ ΙΩΑΝΝΗΣ", 92947]
+];
+
+const rowsEl = document.getElementById('rows');
+
+function nameOptions(selected){
+  let html = '<option value=""></option>';
+  for(const [name] of roster){
+    html += `<option value="${name}" ${name===selected?'selected':''}>${name}</option>`;
+  }
+  return html;
+}
+
+function amFor(name){
+  const hit = roster.find(r => r[0] === name);
+  return hit ? hit[1] : '';
+}
+
+function addRow(){
+  const aa = rowsEl.children.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="aa">${aa}</td>
+    <td><select onchange="updateAM(this)">${nameOptions('')}</select></td>
+    <td class="am"></td>
+    <td><input type="text"></td>
+    <td class="del"><button onclick="removeRow(this)" title="Διαγραφή γραμμής">✕</button></td>
+  `;
+  rowsEl.appendChild(tr);
+}
+
+function updateAM(select){
+  const tr = select.closest('tr');
+  tr.querySelector('.am').textContent = amFor(select.value);
+}
+
+function removeRow(btn){
+  btn.closest('tr').remove();
+  renumber();
+}
+
+function renumber(){
+  [...rowsEl.children].forEach((tr, i) => {
+    tr.querySelector('.aa').textContent = i + 1;
+  });
+}
+
+function doPrint(){
+  window.focus();
+  window.print();
+}
+
+const today = new Date();
+const dd = String(today.getDate()).padStart(2,'0');
+const mm = String(today.getMonth()+1).padStart(2,'0');
+const yyyy = today.getFullYear();
+document.getElementById('date').textContent = `${dd}/${mm}/${yyyy}`;
+for(let i=0;i<10;i++) addRow();
+</script>
+
+</body>
+</html>
