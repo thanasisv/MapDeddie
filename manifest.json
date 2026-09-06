@@ -1,0 +1,16 @@
+{
+  "name": "ΔΕΔΔΗΕ - Συνεργείο Μετρήσεων",
+  "short_name": "ΔΕΔΔΗΕ",
+  "start_url": "https://thanasisv.github.io/MapDeddie/app.html",
+  "scope": "https://thanasisv.github.io/MapDeddie/",
+  "display": "standalone",
+  "background_color": "#5005f3",
+  "theme_color": "#5005f3",
+  "icons": [
+    {
+      "src": "https://thanasisv.github.io/MapDeddie/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
