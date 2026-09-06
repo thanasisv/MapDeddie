@@ -67,12 +67,47 @@
         }
 
         /* Πλέγμα για τα κουμπιά του μενού */
-        .buttons-grid {
+        .buttons-grid, .phone-buttons-grid {
             display: none; /* Κρυφό από προεπιλογή, εμφανίζεται μόνο στην αρχική */
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             width: 100%;
             margin-bottom: 40px;
+        }
+
+        /* Υποκατηγορίες τηλεφώνων */
+        .phone-category {
+            display: none;
+            width: 100%;
+        }
+
+        #phone-tab-menu:checked ~ .phone-buttons-grid {
+            display: grid;
+        }
+
+        #phone-tab-1:checked ~ #phone-cat-1,
+        #phone-tab-2:checked ~ #phone-cat-2,
+        #phone-tab-3:checked ~ #phone-cat-3,
+        #phone-tab-4:checked ~ #phone-cat-4,
+        #phone-tab-5:checked ~ #phone-cat-5,
+        #phone-tab-6:checked ~ #phone-cat-6,
+        #phone-tab-7:checked ~ #phone-cat-7,
+        #phone-tab-8:checked ~ #phone-cat-8,
+        #phone-tab-9:checked ~ #phone-cat-9 {
+            display: block;
+        }
+
+        /* Κρύβουμε το "Πίσω στο Αρχικό Μενού" όσο είμαστε μέσα σε κατηγορία τηλεφώνων */
+        #phone-tab-1:checked ~ .phone-back-home,
+        #phone-tab-2:checked ~ .phone-back-home,
+        #phone-tab-3:checked ~ .phone-back-home,
+        #phone-tab-4:checked ~ .phone-back-home,
+        #phone-tab-5:checked ~ .phone-back-home,
+        #phone-tab-6:checked ~ .phone-back-home,
+        #phone-tab-7:checked ~ .phone-back-home,
+        #phone-tab-8:checked ~ .phone-back-home,
+        #phone-tab-9:checked ~ .phone-back-home {
+            display: none;
         }
 
         /* Στυλ για τα κουμπιά-ετικέτες (Labels) */
@@ -274,7 +309,7 @@
         <div class="buttons-grid">
             <label for="tab-info1" class="btn">Πληροφορία 1</label>
             <label for="tab-info2" class="btn">Πληροφορία 2</label>
-            <label for="tab-info3" class="btn">Δελτίο Σίτισης</label>
+            <label for="tab-info3" class="btn">Δελτίο Σιτίσεως</label>
             <label for="tab-info4" class="btn">Πληροφορία 4</label>
             <label for="tab-info5" class="btn">Τηλέφωνα</label>
             <label for="tab-info6" class="btn">Αναζήτηση Στίγματος</label>
@@ -341,14 +376,40 @@
         <!-- Υποκατηγορία 5 (Τηλέφωνα) -->
         <div id="info5" class="content-section">
             <h2>Τηλεφωνικός Κατάλογος</h2>
-            
-            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
 
-            <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
-            
-            <div class="contact-box">
-                <!-- Επαφή 1 -->
-                <div class="contact-row">
+            <label for="tab-home" class="btn-back phone-back-home">⬅ Πίσω στο Αρχικό Μενού</label>
+
+            <!-- Ραδιόφωνα για τις 9 υποκατηγορίες τηλεφώνων -->
+            <input type="radio" name="phone-tabs" id="phone-tab-menu" checked>
+            <input type="radio" name="phone-tabs" id="phone-tab-1">
+            <input type="radio" name="phone-tabs" id="phone-tab-2">
+            <input type="radio" name="phone-tabs" id="phone-tab-3">
+            <input type="radio" name="phone-tabs" id="phone-tab-4">
+            <input type="radio" name="phone-tabs" id="phone-tab-5">
+            <input type="radio" name="phone-tabs" id="phone-tab-6">
+            <input type="radio" name="phone-tabs" id="phone-tab-7">
+            <input type="radio" name="phone-tabs" id="phone-tab-8">
+            <input type="radio" name="phone-tabs" id="phone-tab-9">
+
+            <!-- Υπομενού 9 κατηγοριών (φαίνεται πρώτο) -->
+            <div class="phone-buttons-grid">
+                <label for="phone-tab-1" class="btn">ΜΕΤΡΗΣΕΙΣ</label>
+                <label for="phone-tab-2" class="btn">ΚΑΤΑΝΟΜΕΣ</label>
+                <label for="phone-tab-3" class="btn">ΦΙΛΟΘΕΗ/ΚΗΦΙΣΙΑ</label>
+                <label for="phone-tab-4" class="btn">ΠΕΡΙΣΤΕΡΙ</label>
+                <label for="phone-tab-5" class="btn">ΑΘΗΝΑ</label>
+                <label for="phone-tab-6" class="btn">ΠΕΙΡΑΙΑΣ</label>
+                <label for="phone-tab-7" class="btn">ΚΑΛΛΙΘΕΑ</label>
+                <label for="phone-tab-8" class="btn">ΜΕΣΟΓΕΙΑ</label>
+                <label for="phone-tab-9" class="btn">ΕΛΕΥΣΙΝΑ</label>
+            </div>
+
+            <!-- Κατηγορία 1 -->
+            <div id="phone-cat-1" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
                     <span style="font-weight: 600;">ΓΡΑΦΕΙΟ ΜΕΤΡΗΣΕΩΝ</span>
                     <a href="tel:2108213202" class="phone-link">2108213202</a>
                 </div>
@@ -367,6 +428,122 @@
                 <div class="contact-row">
                     <span style="font-weight: 600;">ΡΟΥΚΑΣ ΚΩΝΣΤΑΝΤΙΝΟΣ</span>
                     <a href="tel:6944326824" class="phone-link">6944326824</a>
+                </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 2 -->
+            <div id="phone-cat-2" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">ΝΕΑΣ ΙΩΝΙΑΣ</span>
+                        <a href="tel:2102772696" class="phone-link">2102772696</a>
+                        <a href="tel:2102773435" class="phone-link">2102773435</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;"> 20KV</span>
+                        <a href="tel:2108237511" class="phone-link">2108237511</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;"> 22KV/6.6KV</span>
+                        <a href="tel:2108824130" class="phone-link">2108824130</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">ΠΑΛΗΝΗ</span>
+                        <a href="tel:2106657108" class="phone-link">2106657108</a>
+                        <a href="tel:2106657193" class="phone-link">2106657193</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">150KV          </span>     
+                        <a href="tel:2102723531" class="phone-link">2102723531</a>
+                        <a href="tel:2102723532" class="phone-link">2102723532</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 3 -->
+            <div id="phone-cat-3" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">ΤΣΙΑΤΑΣ ΓΙΩΡΓΟΣ</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 4 -->
+            <div id="phone-cat-4" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 5 -->
+            <div id="phone-cat-5" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 6 -->
+            <div id="phone-cat-6" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 7 -->
+            <div id="phone-cat-7" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 8 -->
+            <div id="phone-cat-8" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 9 -->
+            <div id="phone-cat-9" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
                 </div>
             </div>
         </div>
