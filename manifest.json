@@ -4,7 +4,7 @@
   "start_url": "https://thanasisv.github.io/MapDeddie/app.html",
   "scope": "https://thanasisv.github.io/MapDeddie/",
   "display": "standalone",
-  "background_color": "#5005f3",
+  "background_color": "#161515",
   "theme_color": "#5005f3",
   "icons": [
     {
