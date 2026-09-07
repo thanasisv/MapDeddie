@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Όρια Δοκιμών Καλωδίων ΔΕΔΔΗΕ (με 6.6 & 22 kV)</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 15px; }
+  .container { max-width: 740px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+  h1 { text-align: center; color: #c62828; font-size: 22px; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 22px; }
+  label { display: block; font-weight: bold; margin-top: 14px; color: #333; font-size: 14px; }
+  select, button { width: 100%; padding: 11px; margin-top: 6px; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+  select { border: 1px solid #ccc; background: #fff; }
+  button { background: #c62828; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 22px; }
+  button:hover { background: #b71c1c; }
+  .result-box { margin-top: 25px; background: #fff8e1; border: 2px solid #ff9800; border-radius: 10px; padding: 18px; display: none; }
+  .res-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #ffe0b2; }
+  .res-row:last-child { border-bottom: none; }
+  .res-title { font-size: 14px; color: #e65100; font-weight: bold; }
+  .res-val { font-size: 20px; font-weight: bold; color: #b71c1c; }
+  .ok { color: #2e7d32; }
+  .info { font-size: 13px; color: #555; margin-top: 12px; line-height: 1.45; }
+  .warning { background: #ffebee; border-left: 5px solid #c62828; padding: 10px 14px; margin-top: 12px; font-size: 13px; color: #b71c1c; display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Όρια Δοκιμών Καλωδίων ΔΕΔΔΗΕ</h1>
+  <div class="subtitle">Centrix 2.0 • IEEE 400.2 • IEC 60502 • ΕΛΟΤ HD 384 • με 6.6 kV & 22 kV</div>
+
+  <label for="cable">1. Τύπος Καλωδίου:</label>
+  <select id="cable">
+    <optgroup label="Χαμηλή Τάση (0.6/1 kV)">
+      <option value="xt_pvc">Υπόγειο ΧΤ – NYY / NAYY (PVC)</option>
+      <option value="xt_xlpe">Υπόγειο ΧΤ – NA2XY (XLPE)</option>
+      <option value="xt_overhead">Εναέριο ΧΤ – AsXSn (XLPE)</option>
+    </optgroup>
+    <optgroup label="Μέση Τάση 6.6 kV">
+      <option value="mt66_xlpe">Υπόγειο ΜΤ 6.6 kV – XLPE</option>
+      <option value="mt66_pilc">Παλαιό Υπόγειο ΜΤ 6.6 kV – PILC</option>
+    </optgroup>
+    <optgroup label="Μέση Τάση 15 kV">
+      <option value="mt15_xlpe">Υπόγειο ΜΤ 15 kV – XLPE</option>
+      <option value="mt15_pilc">Παλαιό Υπόγειο ΜΤ 15 kV – PILC</option>
+    </optgroup>
+    <optgroup label="Μέση Τάση 20 kV">
+      <option value="mt20_xlpe" selected>Υπόγειο ΜΤ 20 kV – XLPE</option>
+      <option value="mt20_overhead">Εναέριο Συνεσπειρωμένο ΜΤ 20 kV</option>
+      <option value="mt20_pilc">Παλαιό Υπόγειο ΜΤ 20 kV – PILC</option>
+    </optgroup>
+    <optgroup label="Μέση Τάση 22 kV">
+      <option value="mt22_xlpe">Υπόγειο ΜΤ 22 kV – XLPE</option>
+      <option value="mt22_pilc">Παλαιό Υπόγειο ΜΤ 22 kV – PILC</option>
+    </optgroup>
+  </select>
+
+  <label for="mode">2. Είδος Δοκιμής:</label>
+  <select id="mode">
+    <option value="riso">Αντίσταση Μόνωσης (Riso)</option>
+    <option value="vlf">Δοκιμή Αντοχής VLF 0.1 Hz</option>
+    <option value="sheath">Δοκιμή Μανδύα (Sheath Test)</option>
+    <option value="dc">Δοκιμή Συνεχούς Τάσης (DC)</option>
+    <option value="arm">Προ-εντοπισμός ARM / Shock Wave</option>
+    <option value="ice">Προ-εντοπισμός ICE / Thumper</option>
+  </select>
+
+  <label for="condition">3. Κατάσταση Καλωδίου:</label>
+  <select id="condition">
+    <option value="existing">Υφιστάμενο (μετά από βλάβη / επισκευή)</option>
+    <option value="new">Νέο (παραλαβή / παράδοση)</option>
+  </select>
+
+  <button onclick="calculate()">Εμφάνιση Ορίων</button>
+
+  <div id="result" class="result-box">
+    <div class="res-row">
+      <span class="res-title">Μέγιστη Επιτρεπόμενη Τάση:</span>
+      <span class="res-val" id="maxV">–</span>
+    </div>
+    <div class="res-row">
+      <span class="res-title ok">Προτεινόμενη Τάση Δοκιμής:</span>
+      <span class="res-val ok" id="recV">–</span>
+    </div>
+    <div class="res-row" id="acceptRow" style="display:none;">
+      <span class="res-title">Ελάχιστη Αποδεκτή Τιμή:</span>
+      <span class="res-val" id="acceptV">–</span>
+    </div>
+    <div class="info" id="info"></div>
+    <div class="warning" id="warning"></div>
+  </div>
+</div>
+
+<script>
+function calculate() {
+  const cable = document.getElementById('cable').value;
+  const mode  = document.getElementById('mode').value;
+  const cond  = document.getElementById('condition').value;
+
+  let maxV = '', recV = '', accept = '', info = '', warning = '';
+  let showAccept = false;
+  const isXLPE = cable.includes('xlpe') || cable.includes('overhead');
+
+  // ===== ΧΤ =====
+  if (cable.startsWith('xt_')) {
+    if (mode === 'riso') {
+      maxV = '1000 V DC'; recV = '500 V DC'; accept = '≥ 0,5 MΩ (ιδανικά ≥ 1 MΩ)';
+      info = 'ΕΛΟΤ HD 384 / IEC 60364'; showAccept = true;
+    } else if (mode === 'sheath') {
+      maxV = '1 kV DC'; recV = '0,5 kV DC'; info = 'Δοκιμή μανδύα ΧΤ';
+    } else if (mode === 'arm' || mode === 'ice') {
+      maxV = '2–4 kV Surge'; recV = '1–2 kV'; info = 'Χαμηλή ενέργεια κρούσης σε ΧΤ';
+    } else {
+      maxV = '1 kV'; recV = '0,5–1 kV'; info = 'Για ΧΤ χρησιμοποιείται κυρίως Riso';
+    }
+  }
+
+  // ===== 6.6 kV =====
+  else if (cable.startsWith('mt66_')) {
+    if (mode === 'riso') {
+      maxV = '5–10 kV DC'; recV = '5 kV DC'; accept = '≥ 100 MΩ'; showAccept = true;
+      info = 'Πρακτική τιμή για ΜΤ 6.6 kV';
+    } else if (mode === 'vlf') {
+      if (cond === 'new') { maxV = '13 kV rms / 18 kV peak'; recV = '10–13 kV rms'; }
+      else { maxV = '10 kV rms / 14 kV peak'; recV = '7–10 kV rms'; }
+      info = 'IEEE 400.2 (κλάση ≈5–8 kV). Διάρκεια 30–60 λεπτά.';
+    } else if (mode === 'dc') {
+      if (isXLPE) { maxV = 'ΔΕΝ ΣΥΝΙΣΤΑΤΑΙ'; recV = 'Αποφύγετε DC'; warning = 'Απαγορεύεται DC σε XLPE. Χρησιμοποιήστε VLF.'; }
+      else { maxV = cond==='new' ? '20 kV DC' : '15 kV DC'; recV = '12–15 kV DC'; info = 'Μόνο για PILC.'; }
+    } else if (mode === 'sheath') {
+      maxV = '5–10 kV DC'; recV = '3–5 kV DC'; info = 'Δοκιμή μανδύα.';
+    } else {
+      maxV = '8–12 kV Surge'; recV = '5–8 kV'; info = 'Ξεκινήστε από χαμηλή τάση.';
+    }
+  }
+
+  // ===== 15 kV =====
+  else if (cable.startsWith('mt15_')) {
+    if (mode === 'riso') {
+      maxV = '10 kV DC'; recV = '5–10 kV DC'; accept = '≥ 100 MΩ'; showAccept = true;
+    } else if (mode === 'vlf') {
+      if (cond === 'new') { maxV = '22 kV rms / 31 kV peak'; recV = '19 kV rms'; }
+      else { maxV = '18 kV rms / 25 kV peak'; recV = '15 kV rms'; }
+      info = 'IEEE 400.2. Διάρκεια 30–60 λεπτά.';
+    } else if (mode === 'dc') {
+      if (isXLPE) { maxV = 'ΔΕΝ ΣΥΝΙΣΤΑΤΑΙ'; recV = 'Αποφύγετε DC'; warning = 'Απαγορεύεται DC σε XLPE.'; }
+      else { maxV = cond==='new' ? '35 kV DC' : '25 kV DC'; recV = '20–25 kV DC'; }
+    } else if (mode === 'sheath') {
+      maxV = '10 kV DC'; recV = '3–5 kV DC';
+    } else {
+      maxV = '12–15 kV Surge'; recV = '8–12 kV';
+    }
+  }
+
+  // ===== 20 kV =====
+  else if (cable.startsWith('mt20_')) {
+    if (mode === 'riso') {
+      maxV = '10 kV DC'; recV = '5–10 kV DC'; accept = '≥ 100 MΩ'; showAccept = true;
+    } else if (mode === 'vlf') {
+      if (cond === 'new') { maxV = '29 kV rms / 41 kV peak'; recV = '24–26 kV rms'; }
+      else { maxV = '24 kV rms / 34 kV peak'; recV = '20 kV rms'; }
+      info = 'IEEE 400.2 για 20 kV. Διάρκεια 30–60 λεπτά.';
+    } else if (mode === 'dc') {
+      if (isXLPE) { maxV = 'ΔΕΝ ΣΥΝΙΣΤΑΤΑΙ'; recV = 'Αποφύγετε DC'; warning = 'Απαγορεύεται DC σε XLPE (υπόγεια & συνεσπειρωμένα).'; }
+      else { maxV = cond==='new' ? '48 kV DC' : '32 kV DC'; recV = '28–32 kV DC'; }
+    } else if (mode === 'sheath') {
+      maxV = cable.includes('overhead') ? '5 kV DC' : '10 kV DC';
+      recV = cable.includes('overhead') ? '2–3 kV DC' : '5 kV DC';
+    } else {
+      maxV = '16–20 kV Surge'; recV = '10–15 kV';
+    }
+  }
+
+  // ===== 22 kV =====
+  else if (cable.startsWith('mt22_')) {
+    if (mode === 'riso') {
+      maxV = '10 kV DC'; recV = '5–10 kV DC'; accept = '≥ 100 MΩ'; showAccept = true;
+    } else if (mode === 'vlf') {
+      if (cond === 'new') { maxV = '32 kV rms / 45 kV peak'; recV = '27–29 kV rms'; }
+      else { maxV = '27 kV rms / 38 kV peak'; recV = '21–24 kV rms'; }
+      info = 'IEEE 400.2 (κλάση ≈20–25 kV). Διάρκεια 30–60 λεπτά.';
+    } else if (mode === 'dc') {
+      if (isXLPE) { maxV = 'ΔΕΝ ΣΥΝΙΣΤΑΤΑΙ'; recV = 'Αποφύγετε DC'; warning = 'Απαγορεύεται DC σε XLPE.'; }
+      else { maxV = cond==='new' ? '50 kV DC' : '35 kV DC'; recV = '30–35 kV DC'; }
+    } else if (mode === 'sheath') {
+      maxV = '10 kV DC'; recV = '5 kV DC';
+    } else {
+      maxV = '18–22 kV Surge'; recV = '12–16 kV';
+    }
+  }
+
+  // Εμφάνιση
+  document.getElementById('maxV').innerText = maxV;
+  document.getElementById('recV').innerText = recV;
+  document.getElementById('info').innerText = info || '—';
+
+  const acceptRow = document.getElementById('acceptRow');
+  if (showAccept) {
+    document.getElementById('acceptV').innerText = accept;
+    acceptRow.style.display = 'flex';
+  } else acceptRow.style.display = 'none';
+
+  const warnBox = document.getElementById('warning');
+  if (warning) {
+    warnBox.innerText = warning;
+    warnBox.style.display = 'block';
+  } else warnBox.style.display = 'none';
+
+  document.getElementById('result').style.display = 'block';
+}
+</script>
+</body>
+</html>
