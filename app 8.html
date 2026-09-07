@@ -6,8 +6,8 @@
     <title>ΔΕΔΔΗΕ - Εφαρμογή</title>
 
     <!-- PWA / iPhone install support -->
-    <link rel="manifest" href="manifestv7.json">
-    <link rel="apple-touch-icon" href="Megger.png.webp.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-180.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ΔΕΔΔΗΕ">
@@ -178,18 +178,6 @@
             display: grid;
         }
 
-        /* Εικόνα Megger σαν φόντο ΜΟΝΟ στην αρχική σελίδα (όχι μέσα σε menu) */
-        .app-container {
-            background-image: url('https://thanasisv.github.io/MapDeddie/Megger.png.webp.png');
-            background-repeat: no-repeat;
-            background-position: bottom right;
-            background-size: 160px auto;
-        }
-
-        body.section-open .app-container {
-            background-image: none;
-        }
-
         body.section-open .header {
             display: none;
         }
@@ -312,6 +300,7 @@
 
         <!-- Header & Logo -->
         <div class="header">
+            <img src="https://www.deddie.gr/wp-content/themes/deddie/static/logo.svg" alt="ΔΕΔΔΗΕ Logo">
             <img src="https://thanasisv.github.io/MapDeddie/Megger.png.webp.png" alt="ΔΕΔΔΗΕ Logo">
             <h3>ΔΠΑΣΕ/ΤΚΣΔΜ</h3>
             <h1>ΣΥΝΕΡΓΕΙΟ ΜΕΤΡΗΣΕΩΝ</h1>
@@ -481,8 +470,8 @@
                 <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
                 <div class="contact-box">
                     <div class="contact-row">
-                        <span style="font-weight: 600;"> ΕΡΓΟΔΗΓΕΙΟ</span>
-                        <a href="tel:2102756477" class="phone-link">2102756477</a>
+                        <span style="font-weight: 600;">ΤΣΙΑΤΑΣ ΓΙΩΡΓΟΣ</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
                     </div>
                 </div>
             </div>
@@ -646,7 +635,5 @@
         })();
     </script>
 
-
 </body>
 </html>
-
