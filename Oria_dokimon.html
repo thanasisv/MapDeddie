@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Όρια Τάσης Δοκιμών ΔΕΔΔΗΕ (με Συνεσπειρωμένο ΜΤ)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 15px;
+            padding: 0;
+        }
+        .container {
+            max-width: 650px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: auto;
+        }
+        h2 {
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 12px;
+            color: #333;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        button {
+            width: 100%;
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #b71c1c;
+        }
+        .result-box {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .res-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #ffe0b2;
+        }
+        .res-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .res-title {
+            font-size: 14px;
+            color: #e65100;
+            font-weight: bold;
+        }
+        .res-val {
+            font-size: 22px;
+            font-weight: bold;
+            color: #b71c1c;
+        }
+        .info-text {
+            font-size: 12px;
+            color: #555;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+        .warning-box {
+            background-color: #ffebee;
+            border-left: 4px solid #d32f2f;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Όρια Τάσεων Δοκιμών ΔΕΔΔΗΕ</h2>
+    <div class="subtitle">Πρότυπα IEC 60502-2, IEEE 400.2 & Οδηγίες ΔΕΔΔΗΕ</div>
+
+    <!-- 1. ΤΥΠΟΣ ΚΑΛΩΔΙΟΥ -->
+    <label for="cable">1. Τύπος Καλωδίου ΔΕΔΔΗΕ:</label>
+    <select id="cable">
+        <optgroup label="Χαμηλή Τάση (0.6/1 kV)">
+            <option value="xt_pvc">Υπόγειο ΧΤ - NAYY / NYY (PVC)</option>
+            <option value="xt_xlpe">Υπόγειο ΧΤ - NA2XY (XLPE)</option>
+            <option value="xt_overhead">Εναέριο ΧΤ - AsXSn (XLPE)</option>
+        </optgroup>
+        <optgroup label="Μέση Τάση 15 kV (U0 = 8.7 kV)">
+            <option value="mt15_xlpe">Υπόγειο ΜΤ 15kV - NA2XS(FL)2Y (XLPE)</option>
+            <option value="mt15_pilc">Παλαιό Υπόγειο ΜΤ 15kV - PILC (Χαρτί/Λάδι)</option>
+        </optgroup>
+        <optgroup label="Μέση Τάση 20 kV (U0 = 12 kV)">
+            <option value="mt20_overhead">Εναέριο Συνεσπειρωμένο ΜΤ 20kV - E2XFC2Y / E2XF2Y (XLPE)</option>
+            <option value="mt20_xlpe">Υπόγειο ΜΤ 20kV - NA2XS(FL)2Y (XLPE)</option>
+            <option value="mt20_pilc">Παλαιό Υπόγειο ΜΤ 20kV - PILC (Χαρτί/Λάδι)</option>
+        </optgroup>
+    </select>
+
+    <!-- 2. ΛΕΙΤΟΥΡΓΙΑ / ΔΟΚΙΜΗ -->
+    <label for="mode">2. Λειτουργία / Δοκιμή:</label>
+    <select id="mode">
+        <option value="vlf">Δοκιμή Αντοχής VLF (0.1 Hz)</option>
+        <option value="dc">Δοκιμή Συνεχούς Τάσης (DC Voltage Test)</option>
+        <option value="arm">Προ-εντοπισμός ARM (Arc Reflection / Shock Wave)</option>
+        <option value="ice">Προ-εντοπισμός ICE / Surge (Κρούση / Thumper)</option>
+        <option value="sheath">Δοκιμή Μανδύα (Sheath Test - DC)</option>
+    </select>
+
+    <!-- 3. ΚΑΤΑΣΤΑΣΗ ΚΑΛΩΔΙΟΥ -->
+    <label for="condition">3. Κατάσταση Καλωδίου:</label>
+    <select id="condition">
+        <option value="existing">Υφιστάμενο Καλώδιο (Μετά από Επισκευή/Βλάβη)</option>
+        <option value="new">Νέο Καλώδιο (Παραλαβή / Παράδοση)</option>
+    </select>
+
+    <button onclick="calculateLimits()">Εμφάνιση Ορίων Τάσης</button>
+
+    <!-- ΑΠΟΤΕΛΕΣΜΑΤΑ -->
+    <div id="result" class="result-box" style="display:none;">
+        <div class="res-row">
+            <span class="res-title">Μέγιστη Επιτρεπόμενη Τάση:</span>
+            <span class="res-val" id="maxVoltage">-</span>
+        </div>
+        <div class="res-row" id="recommendedRow">
+            <span class="res-title" style="color:#2e7d32;">Προτεινόμενη Τάση Δοκιμής:</span>
+            <span class="res-val" style="color:#2e7d32;" id="recVoltage">-</span>
+        </div>
+        
+        <div class="info-text" id="infoDetails"></div>
+        <div class="warning-box" id="warningBox" style="display:none;"></div>
+    </div>
+</div>
+
+<script>
+    function calculateLimits() {
+        let cable = document.getElementById('cable').value;
+        let mode = document.getElementById('mode').value;
+        let condition = document.getElementById('condition').value;
+
+        let maxV = "";
+        let recV = "";
+        let info = "";
+        let warning = "";
+
+        // ΧΑΜΗΛΗ ΤΑΣΗ
+        if (cable.startsWith("xt_")) {
+            if (mode === "vlf" || mode === "dc") {
+                maxV = "1.0 kV DC / AC";
+                recV = "0.5 kV - 1.0 kV";
+                info = "Για τη Χαμηλή Τάση (0.6/1kV), η δοκιμή μόνωσης γίνεται με Megaohmmeter (500V - 1000V DC).";
+            } else if (mode === "arm" || mode === "ice") {
+                maxV = "2.0 kV - 4.0 kV Surge";
+                recV = "1.0 kV - 2.0 kV";
+                info = "Στη ΧΑΜΗΛΗ ΤΑΣΗ, περιορίστε την ενέργεια κρούσης (Surge) στα 1kV-2kV για αποφυγή επιπλέον ζημιάς.";
+            } else if (mode === "sheath") {
+                maxV = "1.0 kV DC";
+                recV = "0.5 kV DC";
+                info = "Δοκιμή εξωτερικού μανδύα καλωδίου ΧΤ.";
+            }
+        } 
+        // ΜΕΣΗ ΤΑΣΗ 15 kV (U0 = 8.7 kV)
+        else if (cable.startsWith("mt15_")) {
+            let isXLPE = cable.includes("xlpe");
+
+            if (mode === "vlf") {
+                if (condition === "new") {
+                    maxV = "22 kV RMS / 31 kV Peak";
+                    recV = "19 kV RMS (3xU0)";
+                } else {
+                    maxV = "18 kV RMS / 25 kV Peak";
+                    recV = "15 kV RMS (2.5xU0)";
+                }
+                info = "Δοκιμή VLF 0.1Hz. Διάρκεια: 15-30 λεπτά ανά φάση.";
+            } 
+            else if (mode === "dc") {
+                if (isXLPE) {
+                    maxV = "ΔΕΝ ΣΥΝΙΣΤΑΤΑΙ (Max 15 kV DC)";
+                    recV = "Αποφύγετε το DC";
+                    warning = "ΠΡΟΣΟΧΗ: Η δοκιμή DC σε καλώδια XLPE προκαλεί εγκλωβισμό φορτίου (space charge) και καταστρέφει τη μόνωση! Χρησιμοποιήστε VLF.";
+                } else {
+                    maxV = (condition === "new") ? "35 kV DC" : "25 kV DC";
+                    recV = "20 - 25 kV DC";
+                    info = "Τα καλώδια PILC επιδέχονται δοκιμή DC.";
+                }
+            } 
+            else if (mode === "arm" || mode === "ice") {
+                maxV = "12 kV - 15 kV Surge";
+                recV = "8 kV - 12 kV";
+                info = "Ξεκινήστε την κρούση (Thumper/ARM) από χαμηλή τάση (4-6 kV) και αυξήστε σταδιακά.";
+            } 
+            else if (mode === "sheath") {
+                maxV = "10 kV DC";
+                recV = "3 kV - 5 kV DC";
+                info = "Δοκιμή εξωτερικού μανδύα PE/PVC.";
+            }
+        }
+        // ΜΕΣΗ ΤΑΣΗ 20 kV (U0 = 12 kV)
+        else if (cable.startsWith("mt20_")) {
+            let isXLPE = cable.includes("xlpe") || cable.includes("overhead");
+
+            if (mode === "vlf") {
+                if (condition === "new") {
+                    maxV = "29 kV RMS / 41 kV Peak";
+                    recV = "24 kV RMS (3xU0)";
+                } else {
+                    maxV = "24 kV RMS / 34 kV Peak";
+                    recV = "20 kV RMS (2.5xU0)";
+                }
+                info = "Δοκιμή VLF 0.1Hz για δίκτυο 20kV (Υπόγειο ή Εναέριο Συνεσπειρωμένο). Διάρκεια: 15-30 λεπτά.";
+            } 
+            else if (mode === "dc") {
+                if (isXLPE) {
+                    maxV = "ΔΕΝ ΣΥΝΙΣΤΑΤΑΙ (Max 20 kV DC)";
+                    recV = "Αποφύγετε το DC";
+                    warning = "ΠΡΟΣΟΧΗ: Απαγορεύεται η υψηλή τάση DC σε καλώδια XLPE (Υπόγεια & Εναέρια Συνεσπειρωμένα) λόγω γήρανσης του διηλεκτρικού. Χρησιμοποιήστε αποκλειστικά VLF 0.1Hz.";
+                } else {
+                    maxV = (condition === "new") ? "48 kV DC" : "32 kV DC";
+                    recV = "28 - 32 kV DC";
+                    info = "Δοκιμή DC αποκλειστικά για παλαιά υπόγεια καλώδια χαρτιού/λαδιού (PILC).";
+                }
+            } 
+            else if (mode === "arm" || mode === "ice") {
+                maxV = "16 kV - 20 kV Surge";
+                recV = "10 kV - 15 kV";
+                info = "Στα εναέρια συνεσπειρωμένα ΜΤ, οι βλάβες είναι συχνά ορατές ή οφείλονται σε κλαδιά/κεραυνούς. Ξεκινήστε κρούση ARM/ICE από χαμηλή τάση (6-8 kV).";
+            } 
+            else if (mode === "sheath") {
+                if (cable === "mt20_overhead") {
+                    maxV = "5 kV DC";
+                    recV = "2 kV - 3 kV DC";
+                    info = "Στο εναέριο συνεσπειρωμένο ΜΤ, ο εξωτερικός μανδύας είναι εκτεθειμένος σε περιβαλλοντικές συνθήκες. Απαιτείται προσοχή κατά τη δοκιμή μανδύα.";
+                } else {
+                    maxV = "10 kV DC";
+                    recV = "5 kV DC";
+                    info = "Δοκιμή μανδύα PE υπόγειου καλωδίου (HD 620 S2).";
+                }
+            }
+        }
+
+        document.getElementById('maxVoltage').innerText = maxV;
+        document.getElementById('recVoltage').innerText = recV;
+        document.getElementById('infoDetails').innerText = info;
+
+        let warnBox = document.getElementById('warningBox');
+        if (warning !== "") {
+            warnBox.innerText = warning;
+            warnBox.style.display = "block";
+        } else {
+            warnBox.style.display = "none";
+        }
+
+        document.getElementById('result').style.display = "block";
+    }
+</script>
+
+</body>
+</html>
