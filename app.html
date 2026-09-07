@@ -181,6 +181,16 @@
         body.section-open .header {
             display: none;
         }
+         .home-footer-image {
+            display: none;
+            
+            max-width: 30%;
+            margin-top: 20px;
+        }
+
+        #tab-home:checked ~ .home-footer-image {
+            display: block;
+        }
 
         /* Όταν επιλεγεί κάποιο κουμπί -> Δείξε ΜΟΝΟ την αντίστοιχη υποκατηγορία */
         #tab-info1:checked ~ #info1,
@@ -317,7 +327,8 @@
             <!-- Το κουμπί ανοίγει το PDF μέσα στην εφαρμογή -->
             <label for="tab-pdf" class="btn btn-pdf">Δείτε το Πρόγραμμα (PDF)</label>
         </div>
-
+         <img src="https://thanasisv.github.io/MapDeddie/Megger.png.webp.png" alt="ΔΕΔΔΗΕ Logo" class="home-footer-image">
+        <!-- Υποκατηγορία 1 -->
         <!-- Υποκατηγορία 1 -->
         <div id="info1" class="content-section">
             <h2>Τίτλος Πληροφορίας 10</h2>
