@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ΔΕΔΔΗΕ - Εφαρμογή</title>
+
+    <!-- PWA / iPhone install support -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="Megger.png.webp.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ΔΕΔΔΗΕ">
+    <meta name="theme-color" content="#5005f3">
+
+    <style>
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #b9b7be;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #161515;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            background: #e4def2;
+            min-height: 100vh;
+            min-height: 100dvh;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .header img {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 15px;
+             margin-top: 15px;
+        }
+
+        /* Κρύβουμε τα radio buttons (λειτουργούν στο παρασκήνιο) */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Πλέγμα για τα κουμπιά του μενού */
+        .buttons-grid, .phone-buttons-grid {
+            display: none; /* Κρυφό από προεπιλογή, εμφανίζεται μόνο στην αρχική */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        /* Υποκατηγορίες τηλεφώνων */
+        .phone-category {
+            display: none;
+            width: 100%;
+        }
+
+        #phone-tab-menu:checked ~ .phone-buttons-grid {
+            display: grid;
+        }
+
+        #phone-tab-1:checked ~ #phone-cat-1,
+        #phone-tab-2:checked ~ #phone-cat-2,
+        #phone-tab-3:checked ~ #phone-cat-3,
+        #phone-tab-4:checked ~ #phone-cat-4,
+        #phone-tab-5:checked ~ #phone-cat-5,
+        #phone-tab-6:checked ~ #phone-cat-6,
+        #phone-tab-7:checked ~ #phone-cat-7,
+        #phone-tab-8:checked ~ #phone-cat-8,
+        #phone-tab-9:checked ~ #phone-cat-9 {
+            display: block;
+        }
+
+        /* Κρύβουμε το "Πίσω στο Αρχικό Μενού" όσο είμαστε μέσα σε κατηγορία τηλεφώνων */
+        #phone-tab-1:checked ~ .phone-back-home,
+        #phone-tab-2:checked ~ .phone-back-home,
+        #phone-tab-3:checked ~ .phone-back-home,
+        #phone-tab-4:checked ~ .phone-back-home,
+        #phone-tab-5:checked ~ .phone-back-home,
+        #phone-tab-6:checked ~ .phone-back-home,
+        #phone-tab-7:checked ~ .phone-back-home,
+        #phone-tab-8:checked ~ .phone-back-home,
+        #phone-tab-9:checked ~ .phone-back-home {
+            display: none;
+        }
+
+        /* Στυλ για τα κουμπιά-ετικέτες (Labels) */
+        .btn {
+            background-color: #0f0f10;
+            color: rgb(246, 246, 248);
+            padding: 20px 10px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Το 6ο κουμπί (PDF Link) */
+        .btn-pdf {
+            background-color: #0a0a0a;
+            text-decoration: none;
+            grid-column: span 2;
+            font-size: 25px;
+            padding: 20px;
+        }
+        }
+
+        .btn-pdf:hover {
+            background-color: #0d41ef;
+        }
+
+        /* Κουμπί Πίσω */
+        .btn-back {
+            background-color: #0e0e0f;
+            color: white;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 6px;
+            display: block;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn-back:hover {
+            background-color: #1d16dc;
+        }
+
+        /* Περιοχές Περιεχομένου */
+        .content-section {
+            display: none; /* Όλες οι υποκατηγορίες κρυφές εξ ορισμού */
+            width: 100%;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+            border-top: 4px solid #007bff;
+        }
+
+        /* ---- ΛΟΓΙΚΗ ΕΝΑΛΛΑΓΗΣ ΜΕ ΚΑΘΑΡΟ CSS (ΧΩΡΙΣ JAVASCRIPT) ---- */
+        
+        /* Όταν είναι επιλεγμένη η Αρχική (#tab-home) -> Δείξε μόνο το μενού */
+        #tab-home:checked ~ .buttons-grid {
+            display: grid;
+        }
+
+        body.section-open .header {
+            display: none;
+        }
+         .home-footer-image {
+            display: none;
+            
+            max-width: 50%;
+            margin-top: 20px;
+        }
+
+        #tab-home:checked ~ .home-footer-image {
+            display: block;
+        }
+
+        /* Όταν επιλεγεί κάποιο κουμπί -> Δείξε ΜΟΝΟ την αντίστοιχη υποκατηγορία */
+        #tab-info1:checked ~ #info1,
+        #tab-info2:checked ~ #info2,
+        #tab-info3:checked ~ #info3,
+        #tab-info4:checked ~ #info4,
+        #tab-info5:checked ~ #info5,
+        #tab-info6:checked ~ #info6,
+        #tab-pdf:checked ~ #pdf-section {
+            display: block;
+        }
+
+        /* Στυλ Καταλόγου */
+        .contact-box {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+        .contact-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .contact-row:last-child {
+            border-bottom: none;
+        }
+        .phone-link {
+            color: #090909;
+            text-decoration: none;
+            font-weight: bold;
+            background: #d5d5d5;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Radio Buttons για τον έλεγχο των σελίδων -->
+        <input type="radio" name="app-tabs" id="tab-home" checked>
+        <input type="radio" name="app-tabs" id="tab-info1">
+        <input type="radio" name="app-tabs" id="tab-info2">
+        <input type="radio" name="app-tabs" id="tab-info3">
+        <input type="radio" name="app-tabs" id="tab-info4">
+        <input type="radio" name="app-tabs" id="tab-info5">
+        <input type="radio" name="app-tabs" id="tab-info6">
+        <input type="radio" name="app-tabs" id="tab-pdf">
+
+        <!-- Header & Logo -->
+        <div class="header">
+            <img src="https://www.deddie.gr/wp-content/themes/deddie/static/logo.svg" alt="ΔΕΔΔΗΕ Logo">
+            <h3>ΔΠΑΣΕ/ΤΚΣΔΜ</h3>
+            <h1>ΣΥΝΕΡΓΕΙΟ ΜΕΤΡΗΣΕΩΝ</h1>
+        </div>
+
+        <!-- Αρχικό Μενού (Εμφανίζεται μόνο όταν το #tab-home είναι checked) -->
+        <div class="buttons-grid">
+            <label for="tab-info1" class="btn">Πληροφορία 1</label>
+            <label for="tab-info2" class="btn">Όρια Δοκιμών</label>
+            <label for="tab-info3" class="btn">Δελτίο Σιτίσεως</label>
+            <label for="tab-info4" class="btn"> Αναζήτηση διευθύνσεων</label>
+            <label for="tab-info5" class="btn">☎ Τηλέφωνα</label>
+            <label for="tab-info6" class="btn">Αναζήτηση Στίγματος 📍</label>
+            
+            <!-- Το κουμπί ανοίγει το PDF μέσα στην εφαρμογή -->
+            <label for="tab-pdf" class="btn btn-pdf">Δείτε το Πρόγραμμα 📅</label>
+        </div>
+         <img src="https://thanasisv.github.io/MapDeddie/Megger.png.webp.png" alt="ΔΕΔΔΗΕ Logo" class="home-footer-image">
+        <!-- Υποκατηγορία 1 -->
+        <!-- Υποκατηγορία 1 -->
+        <div id="info1" class="content-section">
+            <h2>Τίτλος Πληροφορίας 10</h2>
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+            <p>Εδώ μπορείς να γράψεις τα δεδομένα που θέλεις για την κατηγορία 1.</p>
+        </div>
+
+        <!-- Υποκατηγορία 2 -->
+        <div id="info2" class="content-section">
+            <h2>Όρια Δοκιμών</h2>
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+             <div style="width: 100%; height: 60vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
+                <iframe src="https://thanasisv.github.io/MapDeddie/oria_dokimon.html"
+                        style="width: 200%; height: 200%; transform: scale(0.5); transform-origin: 0 0; border: none;">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Υποκατηγορία 3 -->
+        <div id="info3" class="content-section">
+            <h2>ΔΕΛΤΙΟ ΣΙΤΗΣΗΣ </h2>
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+            <div style="width: 100%; height: 60vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
+                <iframe src="https://thanasisv.github.io/MapDeddie/Deltio_Sitisis_App%20(3).html"
+                        style="width: 200%; height: 200%; transform: scale(0.5); transform-origin: 0 0; border: none;">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Υποκατηγορία 4 (Χάρτης) -->
+        <div id="info4" class="content-section" style="padding: 10px;">
+            <h2>Χάρτης ΔΕΔΔΗΕ</h2>
+            
+            <label for="tab-home" class="btn-back" style="margin-bottom: 15px;">⬅ Πίσω στο Αρχικό Μενού</label>
+            
+            <!-- Ενσωμάτωση χάρτη με <object> για 100% συμβατότητα στο iPhone -->
+            <div style="width: 100%; height: 60vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
+                <object data="https://thanasisv.github.io/MapDeddie/BKX.html" style="width: 100%; height: 100%;">
+                    <!-- Αν για κάποιο λόγο κολλήσει η συσκευή, βγάζει εναλλακτικό κουμπί -->
+                    <a href="https://thanasisv.github.io/MapDeddie/Map.html" target="_blank" class="btn">Άνοιγμα Χάρτη</a>
+                </object>
+            </div>
+        </div>
+
+       <!-- Υποκατηγορία PDF (Πρόγραμμα Συνεργείου) -->
+<div id="pdf-section" class="content-section" style="padding: 10px;">
+    <h2>Πρόγραμμα Συνεργείου</h2>
+
+    <label for="tab-home" class="btn-back" style="margin-bottom: 15px;">⬅ Πίσω στο Αρχικό Μενού</label>
+
+    <div style="width: 100%; height: 75vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
+        <iframe src="https://docs.google.com/viewer?url=https://cdn.jsdelivr.net/gh/thanasisv/MapDeddie@main/programma.pdf&embedded=true"
+                style="width: 100%; height: 100%; border: none;">
+        </iframe>
+    </div>
+
+    <a href="https://cdn.jsdelivr.net/gh/thanasisv/MapDeddie@main/programma.pdf" target="_blank" class="btn" style="margin-top: 10px;">Άνοιγμα PDF σε νέα καρτέλα</a>
+</div>
+
+        <!-- Υποκατηγορία 5 (Τηλέφωνα) -->
+        <div id="info5" class="content-section">
+            <h2>Τηλεφωνικός Κατάλογος</h2>
+
+            <label for="tab-home" class="btn-back phone-back-home">⬅ Πίσω στο Αρχικό Μενού</label>
+
+            <!-- Ραδιόφωνα για τις 9 υποκατηγορίες τηλεφώνων -->
+            <input type="radio" name="phone-tabs" id="phone-tab-menu" checked>
+            <input type="radio" name="phone-tabs" id="phone-tab-1">
+            <input type="radio" name="phone-tabs" id="phone-tab-2">
+            <input type="radio" name="phone-tabs" id="phone-tab-3">
+            <input type="radio" name="phone-tabs" id="phone-tab-4">
+            <input type="radio" name="phone-tabs" id="phone-tab-5">
+            <input type="radio" name="phone-tabs" id="phone-tab-6">
+            <input type="radio" name="phone-tabs" id="phone-tab-7">
+            <input type="radio" name="phone-tabs" id="phone-tab-8">
+            <input type="radio" name="phone-tabs" id="phone-tab-9">
+
+            <!-- Υπομενού 9 κατηγοριών (φαίνεται πρώτο) -->
+            <div class="phone-buttons-grid">
+                <label for="phone-tab-1" class="btn">ΜΕΤΡΗΣΕΙΣ</label>
+                <label for="phone-tab-2" class="btn">ΚΑΤΑΝΟΜΕΣ</label>
+                <label for="phone-tab-3" class="btn">ΦΙΛΟΘΕΗ/ΚΗΦΙΣΙΑ</label>
+                <label for="phone-tab-4" class="btn">ΠΕΡΙΣΤΕΡΙ</label>
+                <label for="phone-tab-5" class="btn">ΑΘΗΝΑ</label>
+                <label for="phone-tab-6" class="btn">ΠΕΙΡΑΙΑΣ</label>
+                <label for="phone-tab-7" class="btn">ΚΑΛΛΙΘΕΑ</label>
+                <label for="phone-tab-8" class="btn">ΜΕΣΟΓΕΙΑ</label>
+                <label for="phone-tab-9" class="btn">ΕΛΕΥΣΙΝΑ</label>
+            </div>
+
+            <!-- Κατηγορία 1 -->
+            <div id="phone-cat-1" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                    <span style="font-weight: 600;">ΓΡΑΦΕΙΟ ΜΕΤΡΗΣΕΩΝ</span>
+                    <a href="tel:2108213202" class="phone-link">2108213202</a>
+                </div>
+                <div class="contact-row">
+                    <span style="font-weight: 600;">ΒΛΑΧΟΣ ΑΘΑΝΑΣΙΟΣ</span>
+                    <a href="tel:6984733361" class="phone-link">6984733361</a>
+                </div>
+                <div class="contact-row">
+                    <span style="font-weight: 600;">ΙΩΑΝΝΟΥ ΑΝΔΡΕΑΣ</span>
+                    <a href="tel:6945559511" class="phone-link">6945559511</a>
+                </div>
+                <div class="contact-row">
+                    <span style="font-weight: 600;">ΤΣΙΑΤΑΣ ΓΙΩΡΓΟΣ</span>
+                    <a href="tel:6944558949" class="phone-link">6944558949</a>
+                </div>
+                <div class="contact-row">
+                    <span style="font-weight: 600;">ΡΟΥΚΑΣ ΚΩΝΣΤΑΝΤΙΝΟΣ</span>
+                    <a href="tel:6944326824" class="phone-link">6944326824</a>
+                </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 2 -->
+            <div id="phone-cat-2" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">ΝΕΑΣ ΙΩΝΙΑΣ</span>
+                        <a href="tel:2102772696" class="phone-link">2102772696</a>
+                        <a href="tel:2102773435" class="phone-link">2102773435</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;"> 20KV</span>
+                        <a href="tel:2108237511" class="phone-link">2108237511</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;"> 22KV/6.6KV</span>
+                        <a href="tel:2108824130" class="phone-link">2108824130</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">ΠΑΛΗΝΗ</span>
+                        <a href="tel:2106657108" class="phone-link">2106657108</a>
+                        <a href="tel:2106657193" class="phone-link">2106657193</a>
+                    </div>
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">150KV          </span>     
+                        <a href="tel:2102723531" class="phone-link">2102723531</a>
+                        <a href="tel:2102723532" class="phone-link">2102723532</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 3 -->
+            <div id="phone-cat-3" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;"> ΕΡΓΟΔΗΓΕΙΟ</span>
+                        <a href="tel:2102756477" class="phone-link">2102756477</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 4 -->
+            <div id="phone-cat-4" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 5 -->
+            <div id="phone-cat-5" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 6 -->
+            <div id="phone-cat-6" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 7 -->
+            <div id="phone-cat-7" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 8 -->
+            <div id="phone-cat-8" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Κατηγορία 9 -->
+            <div id="phone-cat-9" class="phone-category">
+                <label for="phone-tab-menu" class="btn-back">⬅ Πίσω στις Κατηγορίες</label>
+                <p style="color: #868a87; font-size: 14px; margin-bottom: 15px;">👉 Πατήστε πάνω στο νούμερο για να καλέσετε απευθείας.</p>
+                <div class="contact-box">
+                    <div class="contact-row">
+                        <span style="font-weight: 600;">Όνομα Επαφής</span>
+                        <a href="tel:2100000000" class="phone-link">210*******</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Υποκατηγορία 6 -->
+        <div id="info6" class="content-section" style="padding: 15px;">
+            <h2>Ενότητα 6</h2>
+            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
+
+            <p>Εδώ βάλε το νέο περιεχόμενο.</p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('input[name="app-tabs"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                document.body.classList.toggle('section-open', radio.id !== 'tab-home' && radio.checked);
+            });
+        });
+    </script>
+
+
+</body>
+</html>
