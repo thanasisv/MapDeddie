@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Οδηγός Χρήσης Centrix 2 – BAUR / Megger</title>
+    <style>
+        :root {
+            --primary: #b71c1c;
+            --primary-dark: #7f0000;
+            --accent: #ef6c00;
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --text: #222;
+            --muted: #555;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.55;
+            padding: 20px;
+        }
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 28px 30px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+        header p {
+            font-size: 15px;
+            opacity: 0.92;
+        }
+        nav {
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+            padding: 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        nav a {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #ffebee;
+            transition: 0.2s;
+        }
+        nav a:hover { background: var(--primary); color: white; }
+        .content { padding: 30px; }
+        h2 {
+            color: var(--primary);
+            font-size: 20px;
+            margin: 32px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ffcdd2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2:first-child { margin-top: 0; }
+        h3 {
+            color: #333;
+            font-size: 16px;
+            margin: 20px 0 10px;
+        }
+        p { margin-bottom: 12px; color: #333; }
+        .card {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin: 14px 0;
+            border: 1px solid #eee;
+        }
+        .step-list {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+        .step-list li {
+            position: relative;
+            padding: 12px 12px 12px 52px;
+            margin-bottom: 10px;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .step-list li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 5px solid var(--accent);
+            padding: 14px 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+        }
+        .danger {
+            background: #ffebee;
+            border-left: 5px solid #c62828;
+            padding: 14px 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 5px solid #2e7d32;
+            padding: 14px 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+        }
+        .info {
+            background: #e3f2fd;
+            border-left: 5px solid #1565c0;
+            padding: 14px 16px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        th {
+            background: #fce4ec;
+            color: #b71c1c;
+        }
+        tr:nth-child(even) { background: #fafafa; }
+        ul { padding-left: 22px; margin: 10px 0; }
+        li { margin-bottom: 6px; }
+        .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .footer {
+            text-align: center;
+            padding: 18px;
+            background: #fafafa;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        code {
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        @media (max-width: 600px) {
+            .content { padding: 18px; }
+            header { padding: 20px; }
+            header h1 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>Οδηγός Χρήσης Centrix 2</h1>
+        <p>BAUR / Megger · Πλήρης πρακτικός οδηγός εντοπισμού βλάβης & δοκιμών</p>
+    </header>
+
+    <nav>
+        <a href="#safety">Ασφάλεια</a>
+        <a href="#tdr">TDR / Τηλεφλέξ</a>
+        <a href="#arm">ARM</a>
+        <a href="#ice">ICE / Surge</a>
+        <a href="#vlf">VLF</a>
+        <a href="#sheath">Sheath Test</a>
+        <a href="#workflow">Ροή Εργασίας</a>
+        <a href="#tips">Συμβουλές</a>
+    </nav>
+
+    <div class="content">
+
+        <!-- ========== ΑΣΦΑΛΕΙΑ ========== -->
+        <h2 id="safety">1. Βασικοί Κανόνες Ασφαλείας</h2>
+        
+        <div class="danger">
+            <strong>Υψηλή Τάση – Κίνδυνος Θανάτου</strong><br>
+            Πριν από οποιαδήποτε εργασία βεβαιωθείτε ότι το καλώδιο είναι:
+            <ul>
+                <li>Απομονωμένο από το δίκτυο</li>
+                <li>Πλήρως εκφορτισμένο</li>
+                <li>Γειωμένο και στις δύο πλευρές (όπου είναι δυνατόν)</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Έλεγχοι πριν την έναρξη</h3>
+            <ul>
+                <li>Έλεγχος γείωσης οχήματος και βοηθητικής γείωσης</li>
+                <li>Έλεγχος αντίστασης βρόχου γείωσης (το σύστημα το παρακολουθεί αυτόματα)</li>
+                <li>Βεβαιωθείτε ότι οι πόρτες του οχήματος είναι κλειστές (interlock)</li>
+                <li>Χρησιμοποιείτε πάντα τα κατάλληλα ΜΑΠ (μονωτικά γάντια, κράνος κ.λπ.)</li>
+            </ul>
+        </div>
+
+        <!-- ========== TDR ========== -->
+        <h2 id="tdr">2. TDR / Τηλεφλέξ (Παλμογράφος)</h2>
+        <p>Η βασική μέθοδος προ-εντοπισμού. Στέλνει παλμούς χαμηλής τάσης και μετράει τις αντανακλάσεις.</p>
+
+        <h3>Διαδικασία</h3>
+        <ol class="step-list">
+            <li>Επιλέξτε λειτουργία <strong>TDR / Teleflex</strong> από το κύριο μενού.</li>
+            <li>Συνδέστε το καλώδιο μέτρησης: φάση → θωράκιση (ή μεταξύ φάσεων αν χρειάζεται).</li>
+            <li>Ρυθμίστε την <strong>ταχύτητα διάδοσης (v/2)</strong>:
+                <ul>
+                    <li>XLPE / PE ≈ 80 m/μs</li>
+                    <li>PILC (χαρτί-λάδι) ≈ 70–75 m/μs</li>
+                    <li>Εναέριο συνεσπειρωμένο ≈ 78–82 m/μs</li>
+                </ul>
+            </li>
+            <li>Επιλέξτε εύρος μέτρησης (Range) λίγο μεγαλύτερο από το αναμενόμενο μήκος καλωδίου.</li>
+            <li>Πατήστε <strong>Start / Measure</strong>.</li>
+            <li>Αναλύστε την κυματομορφή:
+                <ul>
+                    <li><strong>Θετική αντανακλάση</strong> → ανοιχτό κύκλωμα (open)</li>
+                    <li><strong>Αρνητική αντανακλάση</strong> → βραχυκύκλωμα (short)</li>
+                </ul>
+            </li>
+        </ol>
+
+        <div class="tip">
+            <strong>Καλύτερη πρακτική:</strong> Χρησιμοποιήστε λειτουργία <em>Comparison</em> ή <em>Differential</em> 
+            συγκρίνοντας με υγιή φάση. Οι διαφορές φαίνονται αμέσως.
+        </div>
+
+        <div class="info">
+            <strong>Σημείωση:</strong> Σε πολύ μεγάλα μήκη ή καλώδια με πολλές μούφες, η ανάλυση μειώνεται. 
+            Σε αυτές τις περιπτώσεις το ARM είναι πιο αποτελεσματικό.
+        </div>
+
+        <!-- ========== ARM ========== -->
+        <h2 id="arm">3. ARM – Arc Reflection Method</h2>
+        <p>Η πιο ισχυρή μέθοδος για εντοπισμό υψηλής αντίστασης και διακοπτόμενων βλαβών.</p>
+
+        <h3>Πώς λειτουργεί</h3>
+        <p>Το σύστημα παίρνει πρώτα ένα κανονικό TDR (αναφορά). Στη συνέχεια δημιουργεί τόξο στη βλάβη με κρούση υψηλής τάσης και παίρνει δεύτερο TDR. Η διαφορά μεταξύ των δύο κυματομορφών δείχνει με ακρίβεια τη θέση της βλάβης.</p>
+
+        <h3>Διαδικασία βήμα-βήμα</h3>
+        <ol class="step-list">
+            <li>Επιλέξτε λειτουργία <strong>ARM</strong>.</li>
+            <li>Κάντε πρώτα ένα καθαρό TDR για αναφορά (χωρίς τόξο).</li>
+            <li>Ρυθμίστε την τάση κρούσης. Ξεκινήστε χαμηλά:
+                <ul>
+                    <li>Χαμηλή Τάση: 1–3 kV</li>
+                    <li>ΜΤ 15 kV: 4–12 kV</li>
+                    <li>ΜΤ 20 kV: 6–15 kV</li>
+                </ul>
+            </li>
+            <li>Πατήστε <strong>Arm / Fire</strong>. Το σύστημα δημιουργεί τόξο και καταγράφει το νέο TDR.</li>
+            <li>Το λογισμικό εμφανίζει αυτόματα τη διαφορά (cursor στη θέση βλάβης).</li>
+            <li>Αν δεν φαίνεται καθαρά, αυξήστε σταδιακά την τάση και επαναλάβετε.</li>
+        </ol>
+
+        <div class="warning">
+            <strong>Προσοχή:</strong> Μην ξεκινάτε αμέσως με υψηλή τάση. Υπερβολική ενέργεια μπορεί να προκαλέσει επιπλέον ζημιά στη μόνωση, ειδικά σε XLPE.
+        </div>
+
+        <div class="tip">
+            Σε εναέρια συνεσπειρωμένα καλώδια οι βλάβες συχνά είναι ορατές ή οφείλονται σε κλαδιά/κεραυνούς. 
+            Ξεκινήστε πάντα από χαμηλή τάση (6–8 kV).
+        </div>
+
+        <!-- ========== ICE / SURGE ========== -->
+        <h2 id="ice">4. ICE / Surge (Κρούση – Thumper)</h2>
+        <p>Χρησιμοποιείται για τον τελικό ακουστικό εντοπισμό (pin-pointing) με γεωφώνη ή ακουστικό σύστημα.</p>
+
+        <h3>Διαδικασία</h3>
+        <ol class="step-list">
+            <li>Επιλέξτε λειτουργία <strong>ICE</strong> ή <strong>Surge</strong>.</li>
+            <li>Ρυθμίστε:
+                <ul>
+                    <li>Τάση κρούσης</li>
+                    <li>Ενέργεια (Joule)</li>
+                    <li>Ρυθμό επανάληψης (συνήθως 1 παλμός κάθε 2–4 δευτερόλεπτα)</li>
+                </ul>
+            </li>
+            <li>Πατήστε <strong>Start</strong>. Το σύστημα αρχίζει να στέλνει επαναλαμβανόμενους παλμούς.</li>
+            <li>Με γεωφώνη (ή ακουστικό σύστημα) περπατήστε κατά μήκος του καλωδίου.</li>
+            <li>Το σημείο με τον δυνατότερο χαρακτηριστικό ήχο «κλικ» είναι η θέση της βλάβης.</li>
+        </ol>
+
+        <div class="card">
+            <h3>Συνιστώμενες τάσεις κρούσης (ενδεικτικά)</h3>
+            <table>
+                <tr>
+                    <th>Τύπος Καλωδίου</th>
+                    <th>Προτεινόμενη Τάση</th>
+                    <th>Μέγιστη</th>
+                </tr>
+                <tr>
+                    <td>Χαμηλή Τάση</td>
+                    <td>1 – 2 kV</td>
+                    <td>4 kV</td>
+                </tr>
+                <tr>
+                    <td>ΜΤ 15 kV</td>
+                    <td>8 – 12 kV</td>
+                    <td>15 kV</td>
+                </tr>
+                <tr>
+                    <td>ΜΤ 20 kV</td>
+                    <td>10 – 15 kV</td>
+                    <td>20 kV</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="warning">
+            Σε υγρά εδάφη ή μετά από βροχή ο ήχος μεταδίδεται χειρότερα. Μπορεί να χρειαστεί μεγαλύτερη ενέργεια ή καλύτερη επαφή του γεωφώνου με το έδαφος.
+        </div>
+
+        <!-- ========== VLF ========== -->
+        <h2 id="vlf">5. Δοκιμή Αντοχής VLF (0.1 Hz)</h2>
+        <p>Χρησιμοποιείται μετά την επισκευή ή για παραλαβή νέου καλωδίου.</p>
+
+        <div class="info">
+            Το Centrix 2 υποστηρίζει VLF με τα attachments <strong>TDM 45</strong> ή <strong>TDM 62</strong> 
+            (ανάλογα με τον εξοπλισμό του οχήματος). Μπορεί να κάνει και Monitored Withstand (VLF + PD / Tanδ) αν υπάρχει η σχετική επιλογή.
+        </div>
+
+        <h3>Βασική διαδικασία</h3>
+        <ol class="step-list">
+            <li>Επιλέξτε λειτουργία VLF.</li>
+            <li>Επιλέξτε κυματομορφή (Sinusoidal ή Cosine-Rectangular).</li>
+            <li>Ρυθμίστε την τάση δοκιμής σύμφωνα με το πρότυπο (IEEE 400.2 / IEC 60502-2).</li>
+            <li>Ορίστε διάρκεια (συνήθως 15–30 λεπτά ανά φάση).</li>
+            <li>Ξεκινήστε τη δοκιμή και παρακολουθήστε για διάσπαση.</li>
+        </ol>
+
+        <!-- ========== SHEATH ========== -->
+        <h2 id="sheath">6. Δοκιμή Μανδύα (Sheath Test)</h2>
+        <p>Ελέγχει την ακεραιότητα του εξωτερικού μανδύα (PE / PVC).</p>
+
+        <div class="card">
+            <ul>
+                <li>Υπόγεια καλώδια: συνήθως 5 kV DC (max 10 kV)</li>
+                <li>Εναέριο συνεσπειρωμένο: 2–3 kV DC (max 5 kV)</li>
+                <li>Διάρκεια: 1 λεπτό είναι αρκετό στις περισσότερες περιπτώσεις</li>
+            </ul>
+        </div>
+
+        <!-- ========== ΡΟΗ ΕΡΓΑΣΙΑΣ ========== -->
+        <h2 id="workflow">7. Συνιστώμενη Ροή Εργασίας</h2>
+        <ol class="step-list">
+            <li><strong>Ασφάλεια</strong> → Απομόνωση, εκφόρτιση, γείωση</li>
+            <li><strong>TDR</strong> → Γρήγορος προ-εντοπισμός</li>
+            <li><strong>ARM</strong> → Ακριβής εντοπισμός (αν χρειάζεται)</li>
+            <li><strong>ICE / Surge + Γεωφώνη</strong> → Ακουστικός εντοπισμός (pin-point)</li>
+            <li><strong>Επισκευή</strong></li>
+            <li><strong>Δοκιμή αντοχής VLF</strong> (και προαιρετικά PD / Tanδ)</li>
+            <li><strong>Επαναφορά</strong> → Εκφόρτιση, γείωση, σύνδεση στο δίκτυο</li>
+        </ol>
+
+        <!-- ========== ΣΥΜΒΟΥΛΕΣ ========== -->
+        <h2 id="tips">8. Χρήσιμες Συμβουλές & Troubleshooting</h2>
+
+        <div class="card">
+            <h3>Όταν δεν φαίνεται καθαρά η βλάβη στο ARM</h3>
+            <ul>
+                <li>Αυξήστε σταδιακά την τάση κρούσης</li>
+                <li>Δοκιμάστε διαφορετική πολικότητα</li>
+                <li>Ελέγξτε αν η βλάβη είναι πολύ κοντά στο άκρο (δύσκολη περίπτωση)</li>
+                <li>Χρησιμοποιήστε ICE + γεωφώνη ως εναλλακτική</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Κακές αντανακλάσεις στο TDR</h3>
+            <ul>
+                <li>Ελέγξτε τη σύνδεση και την επαφή</li>
+                <li>Καθαρίστε τα άκρα του καλωδίου</li>
+                <li>Ρυθμίστε σωστά το Gain και το Range</li>
+                <li>Χρησιμοποιήστε Comparison mode με υγιή φάση</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <strong>Γενική συμβουλή:</strong> Κρατάτε πάντα ιστορικό μετρήσεων (αποθήκευση κυματομορφών). 
+            Βοηθάει πολύ σε μελλοντικές επεμβάσεις στο ίδιο καλώδιο.
+        </div>
+
+        <div class="danger">
+            Μετά από κάθε δοκιμή υψηλής τάσης (ARM, ICE, VLF, DC) το καλώδιο <strong>πρέπει</strong> 
+            να εκφορτιστεί πλήρως και να γειωθεί πριν το αγγίξει οποιοσδήποτε.
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Οδηγός αναφοράς για Centrix 2 / Centrix 2.0 (BAUR / Megger)<br>
+        Οι ακριβείς ονομασίες μενού μπορεί να διαφέρουν ανάλογα με την έκδοση λογισμικού και τις επιλογές του οχήματος.<br>
+        Πάντα συμβουλευτείτε το επίσημο εγχειρίδιο του κατασκευαστή.
+    </div>
+
+</div>
+</body>
+</html>
