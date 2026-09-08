@@ -217,10 +217,12 @@
         }
         .contact-row {
             display: flex;
+            flex-wrap: wrap;              /* ← μόνο αυτή η γραμμή είναι νέα */
             justify-content: space-between;
             align-items: center;
             padding: 12px 5px;
             border-bottom: 1px solid #eee;
+            row-gap: 6px;      
         }
         .contact-row:last-child {
             border-bottom: none;
