@@ -109,7 +109,32 @@
         #phone-tab-8:checked ~ .phone-back-home,
         #phone-tab-9:checked ~ .phone-back-home {
             display: none;
-        }
+        } 
+         /* ---- Υπομενού "Δελτίο Σιτίσεως" ---- */
+.sitisi-buttons-grid {
+    display: none;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+#sitisi-tab-menu:checked ~ .sitisi-buttons-grid {
+    display: grid;
+}
+
+.sitisi-category {
+    display: none;
+    width: 100%;
+}
+#sitisi-tab-1:checked ~ #sitisi-cat-1,
+#sitisi-tab-2:checked ~ #sitisi-cat-2 {
+    display: block;
+}
+
+#sitisi-tab-1:checked ~ .sitisi-back-home,
+#sitisi-tab-2:checked ~ .sitisi-back-home {
+    display: none;
+}
+
 
         /* Στυλ για τα κουμπιά-ετικέτες (Labels) */
         .btn {
@@ -298,14 +323,38 @@
 
         <!-- Υποκατηγορία 3 -->
         <div id="info3" class="content-section">
-            <h2>ΔΕΛΤΙΟ ΣΙΤΗΣΗΣ </h2>
-            <label for="tab-home" class="btn-back">⬅ Πίσω στο Αρχικό Μενού</label>
-            <div style="width: 100%; height: 60vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
-                <iframe src="https://thanasisv.github.io/MapDeddie/Deltio_Sitisis_App%20(3).html"
-                        style="width: 200%; height: 200%; transform: scale(0.5); transform-origin: 0 0; border: none;">
-                </iframe>
-            </div>
+    <h2>ΔΕΛΤΙΟ ΣΙΤΗΣΗΣ </h2>
+    <label for="tab-home" class="btn-back sitisi-back-home">⬅ Πίσω στο Αρχικό Μενού</label>
+
+    <input type="radio" name="sitisi-tabs" id="sitisi-tab-menu" checked>
+    <input type="radio" name="sitisi-tabs" id="sitisi-tab-1">
+    <input type="radio" name="sitisi-tabs" id="sitisi-tab-2">
+
+    <div class="sitisi-buttons-grid">
+        <label for="sitisi-tab-1" class="btn">Δελτίο Σιτίσεως (Τορίνο)</label>
+        <label for="sitisi-tab-2" class="btn">Άλλο Δελτίο</label>
+    </div>
+
+    <div id="sitisi-cat-1" class="sitisi-category">
+        <label for="sitisi-tab-menu" class="btn-back">⬅ Πίσω στις Επιλογές</label>
+        <div style="width: 100%; height: 60vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
+            <iframe src="https://thanasisv.github.io/MapDeddie/Deltio_Sitisis_App%20(3).html"
+                    style="width: 200%; height: 200%; transform: scale(0.5); transform-origin: 0 0; border: none;">
+            </iframe>
         </div>
+    </div>
+
+    <div id="sitisi-cat-2" class="sitisi-category">
+        <label for="sitisi-tab-menu" class="btn-back">⬅ Πίσω στις Επιλογές</label>
+        <div style="width: 100%; height: 60vh; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); -webkit-overflow-scrolling: touch;">
+            <!-- ΕΔΩ βάλε το δικό σου link όταν το αποφασίσεις -->
+            <iframe src="https://thanasisv.github.io/MapDeddie/REPLACE_ME.html"
+                    style="width: 200%; height: 200%; transform: scale(0.5); transform-origin: 0 0; border: none;">
+            </iframe>
+        </div>
+    </div>
+</div>
+
 
         <!-- Υποκατηγορία 4 (Χάρτης) -->
         <div id="info4" class="content-section" style="padding: 10px;">
