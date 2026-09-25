@@ -25,7 +25,6 @@
     border:1px solid #ccc;
     padding:26px 40px 40px;
     box-shadow:0 2px 10px rgba(0,0,0,0.08);
-    transform-origin:top center;
   }
   .headrow{
     display:flex;
@@ -241,22 +240,9 @@ function doPrint(){
 /* Κλιμακώνει ολόκληρο το .sheet ώστε να χωράει πάντα στο πλάτος
    της οθόνης, χωρίς οριζόντιο κόψιμο ή scroll. */
 function fitSheet(){
-  const sheet = document.getElementById('sheet');
-  const outer = sheet.parentElement;
-  sheet.style.transform = 'none';
-  outer.style.height = 'auto';
-
-  const available = outer.clientWidth;
-  const natural = sheet.offsetWidth;
-  const scale = Math.min(1, available / natural);
-
-  sheet.style.transform = `scale(${scale})`;
-  if(scale < 1){
-    outer.style.height = (sheet.offsetHeight * scale) + 'px';
-  }
+  // no-op: κρατάμε τη φυσική ροή, χωρίς τεχνητή σμίκρυνση
 }
-window.addEventListener('resize', fitSheet);
-window.addEventListener('orientationchange', fitSheet);
+
 
 /* --- Αυτόματος υπολογισμός ημερομηνίας λήξης εβδομάδας (+4 μέρες) --- */
 function formatDate(d){
