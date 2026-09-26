@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Πρόγραμμα Συνεργείου Μετρήσεων</title>
+<style>
+:root{
+  --bg:#12181c; --panel:#1a2228; --line:#2a353c; --line-strong:#3c4a52;
+  --ink:#e8edee; --sub:#8ba0a8;
+  --c-p:#eaf6ff; --c-p-bg:#0f7fb3;
+  --c-a:#fff2e2; --c-a-bg:#e0691a;
+  --c-e:#e9e9e9; --c-e-bg:#3f4448;
+  --c-r:#e9fbf0; --c-r-bg:#1f9c58;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f4f2ee; --panel:#ffffff; --line:#ddd7cc; --line-strong:#c7bfae;
+    --ink:#20282b; --sub:#6b7a80;
+    --c-p-bg:#1291c9; --c-a-bg:#f0791f; --c-e-bg:#8a8f93; --c-r-bg:#22ac63;
+  }
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:"Söhne","Inter",system-ui,sans-serif; -webkit-font-smoothing:antialiased;}
+.wrap{max-width:1100px; margin:0 auto; padding:20px 14px 60px;}
+h1{font-size:1.15rem; margin:0 0 4px;}
+.sub{color:var(--sub); font-size:.85rem; margin:0 0 22px;}
+
+.legend{display:flex; gap:14px; flex-wrap:wrap; font-size:.78rem; color:var(--sub); margin-bottom:24px; position:sticky; top:0; background:var(--bg); padding:8px 0; z-index:2;}
+.legend span{display:flex; align-items:center; gap:5px;}
+.swatch{width:14px; height:14px; border-radius:3px; display:inline-block;}
+
+.month-block{margin-bottom:34px;}
+.month-title{font-size:.95rem; font-weight:600; margin:0 0 10px;}
+
+.table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:10px;}
+table{border-collapse:collapse; width:100%; font-size:.76rem;}
+th,td{border:1px solid var(--line); padding:0; text-align:center; min-width:26px;}
+th{background:var(--panel); color:var(--sub); font-weight:600; padding:5px 2px; font-size:.7rem;}
+th.name-head, td.name-cell{
+  position:sticky; left:0; background:var(--panel); z-index:1; text-align:left; min-width:110px; padding:6px 8px; font-weight:600;
+}
+tr.group-start td, tr.group-start th{border-top:2px solid var(--line-strong);}
+td.cell{height:26px; font-weight:600;}
+td.cell.p{background:var(--c-p-bg); color:var(--c-p);}
+td.cell.a{background:var(--c-a-bg); color:var(--c-a);}
+td.cell.e{background:var(--c-e-bg); color:var(--c-e);}
+td.cell.r{background:var(--c-r-bg); color:var(--c-r);}
+
+.holidays{margin-top:10px; font-size:.78rem; color:var(--sub);}
+.holidays b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Πρόγραμμα Συνεργείου Μετρήσεων</h1>
+  <p class="sub">Οκτώβριος 2026 – Ιούλιος 2027</p>
+
+  <div class="legend">
+    <span><span class="swatch" style="background:var(--c-p-bg);border:1px solid var(--c-p)"></span>Π = ΠΡΩΙ</span>
+    <span><span class="swatch" style="background:var(--c-a-bg);border:1px solid var(--c-a)"></span>Α = ΑΠΟΓΕΥΜΑ</span>
+    <span><span class="swatch" style="background:var(--c-e-bg);border:1px solid var(--c-e)"></span>Ε = ΕΚΤΟΣ</span>
+    <span><span class="swatch" style="background:var(--c-r-bg);border:1px solid var(--c-r)"></span>Ρ = ΡΕΠΟ</span>
+  </div>
+
+  <div id="months"></div>
+</div>
+
+<script>
+const WD = ['ΚΥ','ΔΕ','ΤΡ','ΤΕ','ΠΕ','ΠΑ','ΣΑ'];
+const MONTHS = ['ΙΑΝΟΥΑΡΙΟΣ','ΦΕΒΡΟΥΑΡΙΟΣ','ΜΑΡΤΙΟΣ','ΑΠΡΙΛΙΟΣ','ΜΑΙΟΣ','ΙΟΥΝΙΟΣ','ΙΟΥΛΙΟΣ','ΑΥΓΟΥΣΤΟΣ','ΣΕΠΤΕΜΒΡΙΟΣ','ΟΚΤΩΒΡΙΟΣ','ΝΟΕΜΒΡΙΟΣ','ΔΕΚΕΜΒΡΙΟΣ'];
+const CLS = {'Π':'p','Α':'a','Ε':'e','Ρ':'r'};
+
+const data = [
+{y:2026,m:9, gA:'ΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕ', gB:'ΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑ', gC:'ΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠ', h:[['28/10','Επέτειος ΟΧΙ']]},
+{y:2026,m:10, gA:'ΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑ', gB:'ΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠ', gC:'ΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡ', h:[]},
+{y:2026,m:11, gA:'ΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠ', gB:'ΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑ', gC:'ΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡ', h:[['25/12','Χριστούγεννα'],['26/12','Σύναξη Θεοτόκου']]},
+{y:2027,m:0, gA:'ΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑ', gB:'ΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠ', gC:'ΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕ', h:[['01/01','Πρωτοχρονιά'],['06/01','Θεοφάνεια']]},
+{y:2027,m:1, gA:'ΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠ', gB:'ΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕ', gC:'ΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑ', h:[]},
+{y:2027,m:2, gA:'ΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑ', gB:'ΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡ', gC:'ΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠ', h:[['15/03','Καθαρά Δευτέρα'],['25/03','25η Μαρτίου']]},
+{y:2027,m:3, gA:'ΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠ', gB:'ΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠ', gC:'ΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑ', h:[['30/04','Μεγάλη Παρασκευή']]},
+{y:2027,m:4, gA:'ΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡ', gB:'ΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑ', gC:'ΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠ', h:[['01/05','Πρωτομαγιά'],['02/05','Πάσχα'],['03/05','Δευτέρα του Πάσχα']]},
+{y:2027,m:5, gA:'ΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡ', gB:'ΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠ', gC:'ΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑ', h:[['21/06','Αγίου Πνεύματος']]},
+{y:2027,m:6, gA:'ΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕ', gB:'ΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑ', gC:'ΑΑΑΑΑΑΡΡΠΠΠΠΠΠΠΠΕΕΡΡΑΑΑΑΑΑΑΡΡΠΠ', h:[]}
+];
+
+const NAMES = { A:['ΡΟΥΚΑΣ'], B:['ΙΩΑΝΝΟΥ','ΤΣΙΑΤΑΣ','ΒΛΑΧΟΣ'], C:['ΑΡΤΣΑΝΟΣ','ΜΕΤΑΞΑΣ'] };
+
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+
+function buildMonth(mo){
+  const nDays = daysInMonth(mo.y, mo.m);
+  let head1 = '<tr><th class="name-head">ΟΜΑΔΑ / ΗΜΕΡΟΜΗΝΙΑ</th>';
+  let head2 = '<tr><th class="name-head"></th>';
+  for(let d=1; d<=nDays; d++){
+    head1 += `<th>${d}</th>`;
+    head2 += `<th>${WD[new Date(mo.y,mo.m,d).getDay()]}</th>`;
+  }
+  head1 += '</tr>'; head2 += '</tr>';
+
+  let body = '';
+  const groups = [['A',mo.gA], ['B',mo.gB], ['C',mo.gC]];
+  groups.forEach(([key, codes]) => {
+    NAMES[key].forEach((name, i) => {
+      body += `<tr${i===0 ? ' class="group-start"' : ''}><td class="name-cell">${name}</td>`;
+      for(let d=0; d<nDays; d++){
+        const code = codes[d] || '';
+        body += `<td class="cell ${CLS[code]||''}">${code}</td>`;
+      }
+      body += '</tr>';
+    });
+  });
+
+  const holidays = mo.h.length
+    ? `<div class="holidays"><b>Αργίες μήνα:</b> ${mo.h.map(x => x[0]+' - '+x[1]).join(' · ')}</div>`
+    : '';
+
+  return `<div class="month-block">
+    <div class="month-title">${MONTHS[mo.m]} ${mo.y}</div>
+    <div class="table-scroll"><table>${head1}${head2}${body}</table></div>
+    ${holidays}
+  </div>`;
+}
+
+document.getElementById('months').innerHTML = data.map(buildMonth).join('');
+</script>
+</body>
+</html>
